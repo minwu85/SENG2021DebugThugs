@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { PersonService } from '../services/PersonService';
 
 const personService = new PersonService();
