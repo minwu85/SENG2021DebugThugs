@@ -1,1 +1,9 @@
-// placeholder so file doesnt auto delete
+export class Person {
+    constructor(
+      public personUid: string,  // GUID Unique ID
+      public username: string,
+      public password: string,
+      public email: string
+    ) {}
+  }
+  

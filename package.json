@@ -1,0 +1,36 @@
+{
+  "name": "SENG2021DebugThugs",
+  "version": "1.0.0",
+  "description": "SENG2021DebugThugs2025S1",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minwu85/SENG2021DebugThugs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minwu85/SENG2021DebugThugs/issues"
+  },
+  "homepage": "https://github.com/minwu85/SENG2021DebugThugs#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.9",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@types/yamljs": "^0.2.34",
+    "uuid": "^11.1.0",
+    "yamljs": "^0.3.0"
+  }
+}
