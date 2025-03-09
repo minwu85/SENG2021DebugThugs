@@ -1,9 +1,28 @@
-import { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
+import orderRoutes from '../routes/OrderRoutes';
 
 const orderService = new OrderService();
 
 // POST /api/order
+// createOrder
+export async function createOrder(req: Request, res: Response): Promise <void> {
+  const token = req.header('token') as string;
+  const { personUid, itemList, invoiceDetails } = req.body;
+
+  if (!token) {
+    res.status(401).json({ error: 'Token is required' });
+  }
+
+  try {
+    const orderId = await orderService.createOrder(token, personUid, itemList,
+      invoiceDetails);
+    res.status(200).json({ orderId });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export async function saveOrder(req: Request, res: Response) {
   try {
     const { personUid, status, invoiceDetails } = req.body;
@@ -41,3 +60,27 @@ export async function getAllOrdersByPersonUid(req: Request, res: Response) {
     return res.status(500).json({ error: 'Unable to get orders' });
   }
 }
+
+// i have no idea, most of this is from 1531
+const app = express();
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+// Mount the router
+app.use(orderRoutes);
+
+// start server
+const PORT: number = 3000;
+const HOST: string = process.env.IP || '127.0.0.1';
+const server = app.listen(PORT, HOST, () => {
+  console.log(`⚡️ Server started on port ${PORT} at ${HOST}`);
+});
+
+// For coverage, handle Ctrl+C gracefully
+process.on('SIGINT', () => {
+  server.close(() => {
+    console.log('Shutting down server gracefully.');
+    process.exit();
+  });
+});
