@@ -20,8 +20,8 @@ export class OrderService {
    * @returns {string} orderId
   */
   public async createOrder (
-    personUid: string,
     token: string,
+    personUid: string,
     itemList?: Item[],
     invoiceDetails?: any
   ): Promise<string> {
