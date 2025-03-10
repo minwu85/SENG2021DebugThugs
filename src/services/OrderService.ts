@@ -25,14 +25,14 @@ export class OrderService {
     itemList?: Item[],
     invoiceDetails?: any
   ): Promise<string> {
-    // validate token and personUid
-    const validateToken = new Validation();
+    // validate token and personUid – will uncomment out when tokens are implemented
+    // const validateToken = new Validation();
 
-    try {
-      validateToken.validateToken(token, personUid);
-    } catch (error) {
-      throw new Error('Invalid token');
-    }
+    // try {
+    //   validateToken.validateToken(token, personUid);
+    // } catch (error) {
+    //   throw new Error('Invalid token');
+    // }
     
     // create orderUid
     const orderUid = uuidv4();
