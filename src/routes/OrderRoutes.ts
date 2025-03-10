@@ -11,7 +11,6 @@ const router = Router();
 // POST /api/order
 // router.post('/', saveOrder);
 
-// create an order
 router.post('/v1/order/create', createOrder);
 
 // GET /api/order/:invoiceUid

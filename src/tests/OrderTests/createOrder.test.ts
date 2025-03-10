@@ -1,8 +1,9 @@
-import { Item } from "../../domain/Order";
+import { Item, Order } from "../../domain/Order";
 import axios from 'axios';
 import { PORT } from '../../index'
+import { OrderRepository } from "../../repository/OrderRepository";
 
-const SERVER_URL = `http://localhost:${PORT}`;;
+const SERVER_URL = `http://localhost:${PORT}`;
 
 describe('createOrder', () => {
   beforeEach(() => {
@@ -24,6 +25,12 @@ describe('createOrder', () => {
       )
 
       expect(res.status).toBe(200);
+      expect(res.data.orderId).toStrictEqual(expect.any(String));
+      
+      // check has been added to repo
+      const repo = new OrderRepository;
+      const find = repo.findByOrderUid(res.data.orderId);
+      expect(find).toBeDefined();
   });
 });
 
@@ -35,7 +42,7 @@ async function createOrder(
   ) {
     try {
       const res = await axios.post(
-        `${SERVER_URL}/v1/order/create`,
+        `${SERVER_URL}/api/order/v1/order/create`,
         {
           personUid, itemList, invoiceDetails
         },
