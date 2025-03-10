@@ -1,6 +1,7 @@
 import { OrderRepository } from '../repository/OrderRepository';
-import { Order } from '../domain/Order';
+import { Order, Item } from '../domain/Order';
 import { v4 as uuidv4 } from 'uuid';
+import { Validation } from './ServicesHelper';
 
 type OrderStatus = 'Pending' | 'Completed' | 'Deleted';
 
@@ -9,6 +10,38 @@ export class OrderService {
 
   constructor() {
     this.orderRepo = new OrderRepository();
+  }
+
+  /**
+   * create an order
+   * @param {object} itemList
+   * @param {string} token
+   * @param {string} personUid
+   * @returns {string} orderId
+  */
+  public async createOrder (
+    token: string,
+    personUid: string,
+    itemList?: Item[],
+    invoiceDetails?: any
+  ): Promise<string> {
+    // validate token and personUid – will uncomment out when tokens are implemented
+    // const validateToken = new Validation();
+
+    // try {
+    //   validateToken.validateToken(token, personUid);
+    // } catch (error) {
+    //   throw new Error('Invalid token');
+    // }
+    
+    // create orderUid
+    const orderUid = uuidv4();
+
+    // create new Order and save to repo
+    const newOrder = new Order(orderUid, personUid, 'Pending', itemList, invoiceDetails);
+    this.orderRepo.save(newOrder);
+
+    return orderUid;
   }
 
   public async saveOrder(

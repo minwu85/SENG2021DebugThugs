@@ -1,9 +1,28 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
+import orderRoutes from '../routes/OrderRoutes';
 
 const orderService = new OrderService();
 
 // POST /api/order
+// createOrder
+export async function createOrder(req: Request, res: Response): Promise <void> {
+  const token = req.header('token') as string;
+  const { personUid, itemList, invoiceDetails } = req.body;
+
+  if (!token) {
+    res.status(401).json({ error: 'Token is required' });
+  }
+
+  try {
+    const orderId = await orderService.createOrder(token, personUid, itemList,
+      invoiceDetails);
+    res.status(200).json({ orderId });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export async function saveOrder(req: Request, res: Response) {
   try {
     const { personUid, status, invoiceDetails } = req.body;
