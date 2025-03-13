@@ -2,6 +2,7 @@ import { Item } from "../../domain/Order";
 import axios from 'axios';
 import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
+import { closeServer } from "../testHelper";
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -34,9 +35,7 @@ describe('createOrder', () => {
   });
 
   afterAll(async () => {
-    console.log('Closing server after tests...');
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    await new Promise<void>((resolve) => server.close(() => resolve()));
+    await closeServer(server);
   });
 });
 
