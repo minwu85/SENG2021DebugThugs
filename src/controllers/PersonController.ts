@@ -1,14 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { PersonService } from '../services/PersonService';
 
 const personService = new PersonService();
 
 // POST /api/person
 export async function registerUser(req: Request, res: Response): Promise <any> {
+  const { username, password, email } = req.body;
+  
   try {
-    const { username, password, email } = req.body;
-    const token = await personService.registerUser(username, password, email);
-    return res.status(200).json(token);
+    const result = await personService.registerUser(username, password, email);
+    return res.status(200).json(result);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Unable to register user' });

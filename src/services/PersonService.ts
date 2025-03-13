@@ -8,12 +8,13 @@ export class PersonService {
 
   constructor() {
     this.personRepo = new PersonRepository();
+    this.sessionRepo = new SessionRepository();
   }
 
   public async registerUser(username: string, password: string, email: string): Promise<string> {
     const personUid = uuidv4();
     const newPerson = new Person(personUid, username, password, email);
-    
+
     // push to repo
     this.personRepo.save(newPerson);
 

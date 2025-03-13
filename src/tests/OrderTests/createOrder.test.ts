@@ -1,4 +1,4 @@
-import { Item, Order } from "../../domain/Order";
+import { Item } from "../../domain/Order";
 import axios from 'axios';
 import { PORT } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
