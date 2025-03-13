@@ -35,11 +35,6 @@ const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-process.on('SIGTERM', () => {
-  console.log('Shutting down server gracefully.');
-  server.close(() => process.exit(0));
-});
-
 // For coverage, handle Ctrl+C gracefully
 process.on('SIGINT', () => {
   server.close(() => {
@@ -48,4 +43,5 @@ process.on('SIGINT', () => {
   });
 });
 
+export { server }
 export { PORT };

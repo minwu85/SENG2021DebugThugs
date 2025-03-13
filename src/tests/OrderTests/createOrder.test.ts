@@ -1,6 +1,6 @@
 import { Item } from "../../domain/Order";
 import axios from 'axios';
-import { PORT } from '../../index'
+import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
 
 const SERVER_URL = `http://localhost:${PORT}`;
@@ -31,6 +31,12 @@ describe('createOrder', () => {
       const repo = new OrderRepository;
       const find = repo.findByOrderUid(res.data.orderId);
       expect(find).toBeDefined();
+  });
+
+  afterAll(async () => {
+    console.log('Closing server after tests...');
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise<void>((resolve) => server.close(() => resolve()));
   });
 });
 
