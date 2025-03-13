@@ -1,19 +1,27 @@
-import { PersonRepository } from '../repository/PersonRepository';
+import { PersonRepository, SessionRepository } from '../repository/PersonRepository';
 import { Person } from '../domain/Person';
 import { v4 as uuidv4 } from 'uuid';
 
 export class PersonService {
   private personRepo: PersonRepository;
+  private sessionRepo: SessionRepository;
 
   constructor() {
     this.personRepo = new PersonRepository();
+    this.sessionRepo = new SessionRepository();
   }
 
-  public async savePerson(username: string, password: string, email: string): Promise<Person> {
-    // Could do validations, hashing, etc. here
+  public async registerUser(username: string, password: string, email: string): Promise<string> {
     const personUid = uuidv4();
     const newPerson = new Person(personUid, username, password, email);
-    return this.personRepo.save(newPerson);
+
+    // push to repo
+    this.personRepo.save(newPerson);
+
+    // generate new token
+    const newToken = this.sessionRepo.startSession(personUid);
+
+    return newToken;
   }
 
   public async getPersonByUsername(username: string): Promise<Person | null> {

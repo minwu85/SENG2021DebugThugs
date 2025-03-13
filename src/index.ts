@@ -31,8 +31,17 @@ app.use('/api/order', orderRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+// For coverage, handle Ctrl+C gracefully
+process.on('SIGINT', () => {
+  server.close(() => {
+    console.log('Shutting down server gracefully.');
+    process.exit();
+  });
+});
+
+export { server }
 export { PORT };

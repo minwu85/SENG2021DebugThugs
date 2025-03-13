@@ -1,7 +1,8 @@
-import { Item, Order } from "../../domain/Order";
+import { Item } from "../../domain/Order";
 import axios from 'axios';
-import { PORT } from '../../index'
+import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
+import { closeServer } from "../testHelper";
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -31,6 +32,10 @@ describe('createOrder', () => {
       const repo = new OrderRepository;
       const find = repo.findByOrderUid(res.data.orderId);
       expect(find).toBeDefined();
+  });
+
+  afterAll(async () => {
+    await closeServer(server);
   });
 });
 
