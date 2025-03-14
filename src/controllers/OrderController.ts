@@ -9,36 +9,35 @@ const orderService = new OrderService();
 // POST /api/order
 // createOrder
 
-// export async function createOrder(req: Request, res: Response): Promise <void> {
-//   const token = req.header('token') as string;
-//   const { personUid, itemList, invoiceDetails } = req.body;
+export async function createOrder(req: Request, res: Response): Promise <void> {
+  const token = req.header('token') as string;
+  const { personUid, itemList, invoiceDetails } = req.body;
 
-//   if (!token) {
-//     res.status(401).json({ error: 'Token is required' });
-//   }
+  if (!token) {
+    res.status(401).json({ error: 'Token is required' });
+  }
 
-//   try {
-//     const result = await orderService.createOrder(token, personUid, itemList,
-//       invoiceDetails);
-//     res.status(200).json({ result });
-//   } catch (error) {
-//     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-//     res.status(400).json({ message: errorMessage });
-//   }
-// }
-
-export async function createOrder(req: Request, res: Response) {
   try {
-    const { personUid, itemList, invoiceDetails } = req.body;
-    const order = await orderService.createOrder(personUid, itemList, invoiceDetails);
-    res.status(201).json({ result: order });
+    const result = await orderService.createOrder(token, personUid, itemList,
+      invoiceDetails);
+    res.status(200).json({ result });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    if (!res.headersSent) {
-      res.status(400).json({ message: errorMessage });
-    }
+    res.status(400).json({ message: error.message });
   }
 }
+
+// export async function createOrder(req: Request, res: Response) {
+//   try {
+//     const { personUid, itemList, invoiceDetails } = req.body;
+//     const order = await orderService.createOrder(personUid, itemList, invoiceDetails);
+//     res.status(201).json({ result: order });
+//   } catch (error) {
+//     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+//     if (!res.headersSent) {
+//       res.status(400).json({ message: errorMessage });
+//     }
+//   }
+// }
 
 // GET /api/order/:invoiceUid - LUKE
 export async function getOrderByUid(req: Request, res: Response) : Promise <any> {

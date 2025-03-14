@@ -49,17 +49,9 @@ describe('fetchXml', () => {
     try {
       await fetchXmlRequest('wrongorderuid');
       fail('Did not throw expected error');
-    // } catch (error) {
-    //   expect(error.response.status).toBe(500);
-    //   expect(error.response.data).toStrictEqual(expect.any(String));
-    // }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        expect(error.response.status).toBe(500);
-        expect(error.response.data).toStrictEqual(expect.any(String));
-      } else {
-        throw error;
-      }
+      expect(error.response.status).toBe(500);
+      expect(error.response.data).toStrictEqual(expect.any(String));
     }
   });
 });
