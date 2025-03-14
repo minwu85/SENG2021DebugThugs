@@ -10,8 +10,15 @@ export async function registerUser(req: Request, res: Response): Promise <any> {
   try {
     const result = await personService.registerUser(username, password, email);
     return res.status(200).json(result);
+
+///// this is my issue
+
+  // } catch (error) {
+  //   return res.status(401).json({ error: error.message });
+  // }
   } catch (error) {
-    return res.status(401).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return res.status(401).json({ error: errorMessage });
   }
 }
 
@@ -21,8 +28,12 @@ export async function loginUser(req: Request, res: Response): Promise <any> {
   try {
     const result = await personService.loginUser(userInput, password);
     return res.status(200).json(result);
+  // } catch (error) {
+  //   return res.status(401).json({ error: error.message });
+  // }
   } catch (error) {
-    return res.status(401).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return res.status(401).json({ error: errorMessage });
   }
 }
 
@@ -66,7 +77,12 @@ export async function logoutUser(req: Request, res: Response): Promise <any> {
   try {
     const result = await personService.logoutUser(token);
     return res.status(200).json(result);
+  // } catch (error) {
+  //   return res.status(500).json({ error: error.message });
+  // }
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return res.status(500).json({ error: errorMessage });
   }
+
 }

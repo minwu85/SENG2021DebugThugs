@@ -1,9 +1,7 @@
 import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
-import { closeServer, createOrder as importedCreateOrder, registerUserRequest } from "../testHelper";
+import { closeServer, createOrder, registerUserRequest } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
-import { Item } from "../../domain/Order";
-import axios from 'axios';
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -21,7 +19,7 @@ describe('createOrder', () => {
   });
 
   test('successful order creation', async () => {
-      const res = await localCreateOrder(
+      const res = await createOrder(
         token,
         personUid,
         [
@@ -42,31 +40,8 @@ describe('createOrder', () => {
       const find = repo.findByOrderUid(res.data.result);
       expect(find).toBeDefined();
   });
-});
-
-export async function localCreateOrder(
-  token: string,
-  personUid: string,
-  itemList?: Item[],
-  invoiceDetails?: any
-  ) {
-    try {
-      const res = await axios.post(
-        `${SERVER_URL}/api/order/v1/order/create`,
-        {
-          personUid, itemList, invoiceDetails
-        },
-        {
-          headers: { token },
-          timeout: 5 * 1000
-        }
-      );
-      return res;
-    } catch (error) {
-      throw error;
-    }
-}
 
   afterAll(async () => {
     await closeServer(server);
   });
+});
