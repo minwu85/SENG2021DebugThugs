@@ -3,7 +3,8 @@ import {
   saveOrder,
   getOrderByInvoiceUid,
   getAllOrdersByPersonUid,
-  createOrder
+  createOrder,
+  cancelOrder 
 } from '../controllers/OrderController';
 
 const router = Router();
@@ -17,6 +18,10 @@ router.post('/v1/order/create', createOrder);
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
 
 // GET /api/order/person/:personUid
-// router.get('/person/:personUid', getAllOrdersByPersonUid);
+router.get('/person/:personUid', getAllOrdersByPersonUid);
+
+// GET /api/order/cancel
+router.delete('/v1/order/cancel', cancelOrder);
+console.log('Cancel order route registered');
 
 export default router;
