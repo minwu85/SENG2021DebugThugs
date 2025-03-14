@@ -38,10 +38,11 @@
     "axios": "^1.8.2",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "fast-xml-parser": "^5.0.9",
     "node": "^23.9.0",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0",
-    "xml": "^1.0.1",
+    "xml-js": "^1.6.11",
     "yamljs": "^0.3.0"
   }
 }

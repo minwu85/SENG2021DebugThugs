@@ -39,12 +39,7 @@ export async function getOrderByInvoiceUid(req: Request, res: Response) {
 }
 
 export async function fetchXml(req: Request, res: Response): Promise <any> {
-  const token = req.header('token') as string;
-  const { orderUid } = req.body;
-
-  if (!token) {
-    res.status(401).json({ error: 'Token is required' });
-  }
+  const { orderUid } = req.params;
 
   try {
     const result = await orderService.fetchXml(orderUid);

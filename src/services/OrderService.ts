@@ -2,7 +2,7 @@ import { OrderRepository } from '../repository/OrderRepository';
 import { Order, Item } from '../domain/Order';
 import { v4 as uuidv4 } from 'uuid';
 import { Validation } from './ServicesHelper';
-import xml from 'xml';
+var convert = require('xml-js');
 
 type OrderStatus = 'Pending' | 'Completed' | 'Deleted';
 
@@ -26,14 +26,14 @@ export class OrderService {
     itemList?: Item[],
     invoiceDetails?: any
   ): Promise<string> {
-    // validate token and personUid – will uncomment out when tokens are implemented
-    // const validateToken = new Validation();
+    // validate token and personUid
+    const validateToken = new Validation();
 
-    // try {
-    //   validateToken.validateToken(token, personUid);
-    // } catch (error) {
-    //   throw new Error('Invalid token');
-    // }
+    try {
+      validateToken.validateToken(token, personUid);
+    } catch (error) {
+      throw new Error('Invalid token');
+    }
     
     // create orderUid
     const orderUid = uuidv4();
@@ -62,17 +62,22 @@ export class OrderService {
       personUid: order.personUid,
       status: order.status,
       itemList: order.itemList?.map(item => ({
-        itemId: item.itemId,
-        itemQuantity: item.itemQuantity,
-        itemSeller: item.itemSeller,
-        itemType: item.itemType,
-        itemPrice: item.itemPrice,
-        priceDiscount: item.priceDiscount
+        item: {
+          itemId: item.itemId,
+          itemQuantity: item.itemQuantity,
+          itemSeller: item.itemSeller,
+          itemType: item.itemType,
+          itemPrice: item.itemPrice,
+          priceDiscount: item.priceDiscount
+        }
       })),
       invoiceDetails: order.invoiceDetails
     };
 
-    return xml([orderFormatted]);
+    var xmlOptions = {compact: true, ignoreComment: true, spaces: 4};
+    const orderXml = convert.json2xml(orderFormatted, xmlOptions);
+    console.log(orderXml);
+    return orderXml;
   }
 
   public async getOrderByUid(orderUid: string): Promise<Order | null> {
