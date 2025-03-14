@@ -1,9 +1,7 @@
-import axios from 'axios';
-import { PORT, server } from '../../index'
+import { server } from '../../index'
 import { PersonRepository, SessionRepository } from "../../repository/PersonRepository";
 import { closeServer } from '../testHelper'
-
-const SERVER_URL = `http://localhost:${PORT}`;
+import { registerUserRequest } from '../testHelper'
 
 describe('registerUser', () => {
   beforeEach(() => {
@@ -30,24 +28,3 @@ describe('registerUser', () => {
     await closeServer(server);
   });
 });
-
-async function registerUserRequest(
-  username: string,
-  password: string,
-  email: string
-  ) {
-    try {
-      const res = await axios.post(
-        `${SERVER_URL}/api/person/v1/registerUser`,
-        {
-          username, password, email
-        },
-        {
-          timeout: 5 * 1000
-        }
-      );
-      return res;
-    } catch (error) {
-      throw error;
-    }
-}

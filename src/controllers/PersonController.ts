@@ -11,8 +11,18 @@ export async function registerUser(req: Request, res: Response): Promise <any> {
     const result = await personService.registerUser(username, password, email);
     return res.status(200).json(result);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Unable to register user' });
+    return res.status(401).json(error.message);
+  }
+}
+
+export async function loginUser(req: Request, res: Response): Promise <any> {
+  const { userInput, password } = req.body;
+
+  try {
+    const result = await personService.loginUser(userInput, password);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(401).json(error.message);
   }
 }
 
