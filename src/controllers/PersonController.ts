@@ -11,8 +11,7 @@ export async function registerUser(req: Request, res: Response): Promise <any> {
     const result = await personService.registerUser(username, password, email);
     return res.status(200).json(result);
   } catch (error) {
-    console.error(error);
-    return res.status(400).json(error.message);
+    return res.status(401).json(error.message);
   }
 }
 
@@ -23,8 +22,7 @@ export async function loginUser(req: Request, res: Response): Promise <any> {
     const result = await personService.loginUser(userInput, password);
     return res.status(200).json(result);
   } catch (error) {
-    console.error(error);
-    return res.status(400).json(error.message);
+    return res.status(401).json(error.message);
   }
 }
 

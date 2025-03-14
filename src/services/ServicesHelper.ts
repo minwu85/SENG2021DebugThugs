@@ -26,7 +26,7 @@ export class Validation {
   public findUser(userInput): Person {
     let user = this.personRepo.findByUsername(userInput);
     if (!user) {
-      user = this.personRepo.findByUsername(userInput);
+      user = this.personRepo.findByEmail(userInput);
     }
     if (!user) {
       throw new Error('User not found');
