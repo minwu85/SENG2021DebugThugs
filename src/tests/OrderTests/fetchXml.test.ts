@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { PORT, server } from '../../index'
-import { closeServer, createOrder, registerUserRequest } from "../testHelper";
+import { closeServer, createOrder, fetchXmlRequest, registerUserRequest } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
 
 const SERVER_URL = `http://localhost:${PORT}`;
@@ -55,14 +55,3 @@ describe('fetchXml', () => {
     }
   });
 });
-
-async function fetchXmlRequest(orderUid: string) {
-    try {
-      const res = await axios.get(
-        `${SERVER_URL}/api/order/v1/order/fetchxml${orderUid}`,
-      );
-      return res;
-    } catch (error) {
-      throw error;
-    }
-}
