@@ -39,6 +39,7 @@ describe('fetchXml', () => {
     const res = await fetchXmlRequest(orderUid);
 
     expect(res.status).toBe(200);
+    expect(res.data).toStrictEqual(expect.any(String));
   });
 
   afterAll(async () => {

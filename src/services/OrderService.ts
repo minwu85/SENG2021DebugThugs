@@ -76,7 +76,6 @@ export class OrderService {
 
     var xmlOptions = {compact: true, ignoreComment: true, spaces: 4};
     const orderXml = convert.json2xml(orderFormatted, xmlOptions);
-    console.log(orderXml);
     return orderXml;
   }
 
