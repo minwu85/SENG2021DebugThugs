@@ -2,6 +2,7 @@ import { OrderRepository } from '../repository/OrderRepository';
 import { Order, Item } from '../domain/Order';
 import { v4 as uuidv4 } from 'uuid';
 import { Validation } from './ServicesHelper';
+import xml from 'xml';
 
 type OrderStatus = 'Pending' | 'Completed' | 'Deleted';
 
@@ -19,7 +20,7 @@ export class OrderService {
    * @param {string} personUid
    * @returns {string} orderId
   */
-  public async createOrder (
+  public async createOrder(
     token: string,
     personUid: string,
     itemList?: Item[],
@@ -44,14 +45,34 @@ export class OrderService {
     return orderUid;
   }
 
-  public async saveOrder(
-    personUid: string,
-    status: OrderStatus,
-    invoiceDetails?: any
-  ): Promise<Order> {
-    const orderUid = uuidv4();
-    const newOrder = new Order(orderUid, personUid, status, invoiceDetails);
-    return this.orderRepo.save(newOrder);
+  /**
+   * converts and order to xml
+   * @param {string} orderUid
+   * @returns {string} xml
+  */
+  public async fetchXml(orderUid: string): Promise <string> {
+    const order = this.orderRepo.findByOrderUid(orderUid);
+    
+    if (!order) {
+      throw new Error('Order does not exist');
+    }
+
+    const orderFormatted = {
+      orderUid: order.orderUid,
+      personUid: order.personUid,
+      status: order.status,
+      itemList: order.itemList?.map(item => ({
+        itemId: item.itemId,
+        itemQuantity: item.itemQuantity,
+        itemSeller: item.itemSeller,
+        itemType: item.itemType,
+        itemPrice: item.itemPrice,
+        priceDiscount: item.priceDiscount
+      })),
+      invoiceDetails: order.invoiceDetails
+    };
+
+    return xml([orderFormatted]);
   }
 
   public async getOrderByUid(orderUid: string): Promise<Order | null> {
