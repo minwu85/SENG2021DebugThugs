@@ -13,6 +13,7 @@ describe('loginUser', () => {
   test('successful login', async () => {
       const res = await loginUserRequest('email', 'password');
 
+      expect(res.status).toBe(200);
       expect(res.data).toStrictEqual(expect.any(String));
 
       // check session was pushed

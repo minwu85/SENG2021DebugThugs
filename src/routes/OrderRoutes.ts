@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import {
-  saveOrder,
   getOrderByInvoiceUid,
   getAllOrdersByPersonUid,
-  createOrder
+  createOrder,
+  fetchXml
 } from '../controllers/OrderController';
 
 const router = Router();
@@ -15,6 +15,8 @@ router.post('/v1/order/create', createOrder);
 
 // GET /api/order/:invoiceUid
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
+
+router.get('/v1/order/fetchxml:orderUid', fetchXml);
 
 // GET /api/order/person/:personUid
 // router.get('/person/:personUid', getAllOrdersByPersonUid);

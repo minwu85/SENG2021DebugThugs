@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { PORT } from '../index'
+import { Item } from "../domain/Order";
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -43,6 +44,40 @@ export async function loginUserRequest(userInput: string, password: string) {
       {
         timeout: 5 * 1000
       }
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function createOrder(
+  token: string,
+  personUid: string,
+  itemList?: Item[],
+  invoiceDetails?: any
+  ) {
+    try {
+      const res = await axios.post(
+        `${SERVER_URL}/api/order/v1/order/create`,
+        {
+          personUid, itemList, invoiceDetails
+        },
+        {
+          headers: { token },
+          timeout: 5 * 1000
+        }
+      );
+      return res;
+    } catch (error) {
+      throw error;
+    }
+}
+
+export async function fetchXmlRequest(orderUid: string) {
+  try {
+    const res = await axios.get(
+      `${SERVER_URL}/api/order/v1/order/fetchxml${orderUid}`,
     );
     return res;
   } catch (error) {
