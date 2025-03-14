@@ -3,7 +3,8 @@ import {
   registerUser,
   loginUser,
   getPersonByUsername,
-  getPersonByEmail
+  getPersonByEmail,
+  logoutUser
 } from '../controllers/PersonController';
 
 const router = Router();
@@ -18,5 +19,8 @@ router.post('/v1/loginUser', loginUser);
 
 // GET /api/person/email/:email
 // router.get('/email/:email', getPersonByEmail);
+
+// DELTE /api/person
+router.delete('/v1/logoutUser', logoutUser);
 
 export default router;

@@ -36,4 +36,9 @@ export class SessionRepository {
 
     return token;
   }
+
+  public endSession(token: string): void {
+    SessionRepository.sessions = SessionRepository.sessions.filter(
+      session => session.token !== token);
+  }
 }
