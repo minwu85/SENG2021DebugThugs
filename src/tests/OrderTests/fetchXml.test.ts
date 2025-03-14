@@ -2,7 +2,6 @@ import axios from 'axios';
 import { PORT, server } from '../../index'
 import { closeServer, createOrder, registerUserRequest } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
-import { OrderRepository } from '../../repository/OrderRepository';
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
