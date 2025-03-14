@@ -45,6 +45,16 @@ describe('fetchXml', () => {
   afterAll(async () => {
     await closeServer(server);
   });
+
+  test('order does not exist', async () => {
+    try {
+      await fetchXmlRequest('wrongorderuid');
+      fail('Did not throw expected error');
+    } catch (error) {
+      expect(error.response.status).toBe(500);
+      expect(error.response.data).toStrictEqual(expect.any(String));
+    }
+  });
 });
 
 async function fetchXmlRequest(orderUid: string) {
