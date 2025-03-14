@@ -34,7 +34,7 @@ describe('createOrder', () => {
   });
 });
 
-async function createOrder(
+export async function createOrder(
   token: string,
   personUid: string,
   itemList?: Item[],

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
 import orderRoutes from '../routes/OrderRoutes';
+import { Order } from '../domain/Order';
 
 const orderService = new OrderService();
 
@@ -34,15 +35,15 @@ export async function saveOrder(req: Request, res: Response) {
   }
 }
 
-// GET /api/order/:invoiceUid
-export async function getOrderByInvoiceUid(req: Request, res: Response) {
+// GET /api/order/:invoiceUid - LUKE
+export async function getOrderByUid(req: Request, res: Response) : Promise <any> {
   try {
     const { invoiceUid } = req.params;
     const order = await orderService.getOrderByUid(invoiceUid);
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    return res.json(order);
+    return res.status(200).json(order);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Unable to get order' });
