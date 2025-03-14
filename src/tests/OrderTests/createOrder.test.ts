@@ -1,7 +1,9 @@
 import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
-import { closeServer, createOrder, registerUserRequest } from "../testHelper";
+import { closeServer, createOrder as importedCreateOrder, registerUserRequest } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
+import { Item } from "../../domain/Order";
+import axios from 'axios';
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -19,7 +21,7 @@ describe('createOrder', () => {
   });
 
   test('successful order creation', async () => {
-      const res = await createOrder(
+      const res = await localCreateOrder(
         token,
         personUid,
         [
@@ -42,7 +44,7 @@ describe('createOrder', () => {
   });
 });
 
-export async function createOrder(
+export async function localCreateOrder(
   token: string,
   personUid: string,
   itemList?: Item[],
@@ -68,4 +70,3 @@ export async function createOrder(
   afterAll(async () => {
     await closeServer(server);
   });
-});

@@ -2,25 +2,41 @@ import { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
 import orderRoutes from '../routes/OrderRoutes';
 import { Order } from '../domain/Order';
+import { OrderRepository } from '../repository/OrderRepository';
 
 const orderService = new OrderService();
 
 // POST /api/order
 // createOrder
-export async function createOrder(req: Request, res: Response): Promise <void> {
-  const token = req.header('token') as string;
-  const { personUid, itemList, invoiceDetails } = req.body;
 
-  if (!token) {
-    res.status(401).json({ error: 'Token is required' });
-  }
+// export async function createOrder(req: Request, res: Response): Promise <void> {
+//   const token = req.header('token') as string;
+//   const { personUid, itemList, invoiceDetails } = req.body;
 
+//   if (!token) {
+//     res.status(401).json({ error: 'Token is required' });
+//   }
+
+//   try {
+//     const result = await orderService.createOrder(token, personUid, itemList,
+//       invoiceDetails);
+//     res.status(200).json({ result });
+//   } catch (error) {
+//     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+//     res.status(400).json({ message: errorMessage });
+//   }
+// }
+
+export async function createOrder(req: Request, res: Response) {
   try {
-    const result = await orderService.createOrder(token, personUid, itemList,
-      invoiceDetails);
-    res.status(200).json({ result });
+    const { personUid, itemList, invoiceDetails } = req.body;
+    const order = await orderService.createOrder(personUid, itemList, invoiceDetails);
+    res.status(201).json({ result: order });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    if (!res.headersSent) {
+      res.status(400).json({ message: errorMessage });
+    }
   }
 }
 
@@ -46,7 +62,8 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
     const result = await orderService.fetchXml(orderUid);
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json(error.message);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return res.status(500).json(errorMessage);
   }
 }
 

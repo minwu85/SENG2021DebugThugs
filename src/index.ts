@@ -1,13 +1,16 @@
-// import express, { Application } from 'express';
-import * as express from 'express';
+import express, { Application } from 'express';
+// import * as express from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
 import * as YAML from 'yamljs';
 
 import personRoutes from './routes/PersonRoutes';
 import orderRoutes from './routes/OrderRoutes';
-import * as cors from 'cors';
-import { Application } from 'express';
+// import * as cors from 'cors';
+import cors from 'cors';
+
+
+// import { Application } from 'express';
 
 // Load the swagger YAML file
 const swaggerDocument = YAML.load(path.join(__dirname, 'swagger', 'swagger.yaml'));

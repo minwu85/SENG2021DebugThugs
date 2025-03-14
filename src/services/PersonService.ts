@@ -35,14 +35,16 @@ export class PersonService {
     try {
       user = validation.findUser(userInput);
     } catch (error) {
-      throw new Error (error.message);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new Error (errorMessage);
     }
 
     // check password is correct
     try {
       validation.validatePassword(user, password);
     } catch (error) {
-      throw new Error(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new Error(errorMessage);
     }
 
     // start a new session for this user
