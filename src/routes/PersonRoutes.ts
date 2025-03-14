@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
-  savePerson,
+  registerUser,
+  loginUser,
   getPersonByUsername,
   getPersonByEmail
 } from '../controllers/PersonController';
@@ -8,7 +9,9 @@ import {
 const router = Router();
 
 // POST /api/person
-// router.post('/', savePerson);
+router.post('/v1/registerUser', registerUser);
+
+router.post('/v1/loginUser', loginUser);
 
 // GET /api/person/:username
 // router.get('/:username', getPersonByUsername);

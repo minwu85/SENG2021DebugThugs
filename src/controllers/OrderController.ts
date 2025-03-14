@@ -16,22 +16,11 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
   }
 
   try {
-    const orderId = await orderService.createOrder(token, personUid, itemList,
+    const result = await orderService.createOrder(token, personUid, itemList,
       invoiceDetails);
-    res.status(200).json({ orderId });
+    res.status(200).json({ result });
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
-}
-
-export async function saveOrder(req: Request, res: Response) {
-  try {
-    const { personUid, status, invoiceDetails } = req.body;
-    const savedOrder = await orderService.saveOrder(personUid, status, invoiceDetails);
-    return res.status(201).json(savedOrder);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Unable to save order' });
   }
 }
 
@@ -47,6 +36,17 @@ export async function getOrderByUid(req: Request, res: Response) : Promise <any>
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Unable to get order' });
+  }
+}
+
+export async function fetchXml(req: Request, res: Response): Promise <any> {
+  const { orderUid } = req.params;
+
+  try {
+    const result = await orderService.fetchXml(orderUid);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error.message);
   }
 }
 
