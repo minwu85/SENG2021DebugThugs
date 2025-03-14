@@ -16,14 +16,16 @@ describe('retrieveOrder', () => {
 
 
     });
-
+    // no working rn
     test('successful order retrieval', async () => {
         const mockOrderData = {
-            itemId: 'itemId',
-            itemQuantity: 2,
-            itemSeller: 'seller'
+            itemId: 'itemId1',
+            itemQuantity: 4,
+            itemSeller: 'seller1'
         }
-        const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data.token;
+        const reg = await registerUserRequest('uName', 'pWord', 'email@email.com');
+        const token = reg.data;
+        // const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data;
         const order1 = await createOrder(
             token, 
             'personUId test', 
@@ -43,9 +45,9 @@ describe('retrieveOrder', () => {
         const mockResponseData = {
             statusCode: 200,
             data: {
-                itemId: 'itemId',
-                itemQuantity: 2,
-                itemSeller: 'seller'
+                itemId: 'itemId2',
+                itemQuantity: 5,
+                itemSeller: 'seller2'
             }
         };
 
