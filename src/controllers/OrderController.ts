@@ -82,4 +82,15 @@ export const cancelOrder = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+// DELETE /api/order/clear
+export const clearOrder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const repo = new OrderRepository();
+    repo.clear();
+    res.status(200).json({ message: 'All orders cleared successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
