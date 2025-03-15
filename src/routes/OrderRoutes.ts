@@ -13,6 +13,8 @@ const router = Router();
 
 router.post('/v1/order/create', createOrder);
 
+router.get('/v1/order/retrieve/all', getAllOrdersByPersonUid);
+
 // GET /api/order/:invoiceUid
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
 

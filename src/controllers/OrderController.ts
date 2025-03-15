@@ -50,7 +50,7 @@ export async function getOrderByInvoiceUid(req: Request, res: Response) {
 }
 
 // GET /api/order/person/:personUid
-export async function getAllOrdersByPersonUid(req: Request, res: Response) {
+export async function getAllOrdersByPersonUid(req: Request, res: Response) : Promise <any> {
   try {
     const { personUid } = req.params;
     const orders = await orderService.getAllOrdersByPersonUid(personUid);
