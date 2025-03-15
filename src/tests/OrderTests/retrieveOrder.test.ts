@@ -4,8 +4,8 @@ import { jest } from '@jest/globals';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 import { OrderRepository } from "../../repository/OrderRepository";
-import { createOrder, registerUserRequest, retrieveOrder } from "../testHelper"
-import { PORT } from "../..";
+import { closeServer, createOrder, registerUserRequest, retrieveOrder } from "../testHelper"
+import { PORT, server } from "../..";
 const SERVER_URL = `http://localhost:${PORT}`;
 
 
@@ -16,7 +16,7 @@ const SERVER_URL = `http://localhost:${PORT}`;
 describe('retrieveOrder', () => {
     // let token: string;
     beforeEach(async () => {
-
+        
 
     });
     // no working rn
@@ -27,7 +27,7 @@ describe('retrieveOrder', () => {
             itemSeller: 'seller1'
         }
         const reg = await registerUserRequest('uName', 'pWord', 'email@email.com');
-        const token = reg.data;
+        const token = reg.data.token;
         // const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data;
         const order1 = await createOrder(
             token, 
@@ -60,6 +60,10 @@ describe('retrieveOrder', () => {
         expect(result).toStrictEqual(mockResponseData);
     });
 
+
+
+
+
     // test('order does not exist', async () => {
     //     const orderUid = 'wrongOrderUid';
     //     const token = 'testToken';
@@ -73,4 +77,166 @@ describe('retrieveOrder', () => {
     //     expect(result).toStrictEqual(mockResponseData);
     
     // });
+    afterAll(async () => {
+        await closeServer(server);
+    });
 });
+
+
+
+/////////////////////////////////////////////////////
+
+
+// import { Item, Order } from "../../domain/Order";
+// import axios from 'axios';
+// import { jest } from '@jest/globals';
+// jest.mock('axios');
+// const mockedAxios = axios as jest.Mocked<typeof axios>;
+// import { OrderRepository } from "../../repository/OrderRepository";
+// import { closeServer, createOrder, registerUserRequest, retrieveOrder } from "../testHelper";
+// import { PORT, server } from "../..";
+// const SERVER_URL = `http://localhost:${PORT}`;
+
+// const mockOrderData = {
+//     itemId: 'itemId1',
+//     itemQuantity: 4,
+//     itemSeller: 'seller1'
+// };
+
+// describe('retrieveOrder', () => {
+//     let orderRepository: OrderRepository;
+
+//     beforeEach(() => {
+//         jest.clearAllMocks();
+//         orderRepository = new OrderRepository();
+//     });
+
+//     afterAll(async () => {
+//         await closeServer(server);
+//     });
+
+//     test('successful order retrieval', async () => {
+//         const mockRegisterResponse = {
+//             data: {
+//                 token: 'testToken'
+//             }
+//         };
+//         const mockCreateOrderResponse = {
+//             data: {
+//                 result: 'testOrderUid'
+//             }
+//         };
+//         const mockRetrieveOrderResponse = {
+//             statusCode: 200,
+//             data: mockOrderData
+//         };
+
+//         mockedAxios.post.mockResolvedValueOnce(mockRegisterResponse);
+//         mockedAxios.post.mockResolvedValueOnce(mockCreateOrderResponse);
+//         mockedAxios.get.mockResolvedValueOnce({ data: mockRetrieveOrderResponse });
+
+//         const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data.token;
+//         const order1 = await createOrder(
+//             token,
+//             'personUId test',
+//             [mockOrderData],
+//             'details'
+//         );
+
+//         const result = await retrieveOrder(order1.data.result, token);
+//         expect(result.statusCode).toStrictEqual(200);
+//         expect(result.data).toStrictEqual(mockOrderData);
+
+//         // Check the order in the repository
+//         const storedOrder = await orderRepository.findByOrderUid(order1.data.result);
+//         expect(storedOrder).toBeDefined();
+//         expect(storedOrder?.itemList).toStrictEqual([mockOrderData]);
+//     });
+
+//     test('successful order retrieval with hardcoded values', async () => {
+//         const orderUid = 'testOrderUid';
+//         const token = 'testToken';
+//         const mockResponseData = {
+//             statusCode: 200,
+//             data: {
+//                 itemId: 'itemId2',
+//                 itemQuantity: 5,
+//                 itemSeller: 'seller2'
+//             }
+//         };
+
+//         mockedAxios.get.mockResolvedValueOnce({ data: mockResponseData });
+
+//         const result = await retrieveOrder(orderUid, token);
+//         expect(result).toStrictEqual(mockResponseData);
+//     });
+
+//     test('order not found', async () => {
+//         const mockError = {
+//             response: {
+//                 status: 404,
+//                 data: 'Order not found'
+//             }
+//         };
+
+//         mockedAxios.get.mockRejectedValueOnce(mockError);
+
+//         try {
+//             await retrieveOrder('wrongOrderUid', 'testToken');
+//             fail('Did not throw expected error');
+//         } catch (error) {
+//             if (axios.isAxiosError(error) && error.response) {
+//                 expect(error.response.status).toBe(404);
+//                 expect(error.response.data).toBe('Order not found');
+//             } else {
+//                 throw error;
+//             }
+//         }
+//     });
+
+//     test('invalid token', async () => {
+//         const mockError = {
+//             response: {
+//                 status: 401,
+//                 data: 'Invalid token'
+//             }
+//         };
+
+//         mockedAxios.get.mockRejectedValueOnce(mockError);
+
+//         try {
+//             await retrieveOrder('testOrderUid', 'invalidToken');
+//             fail('Did not throw expected error');
+//         } catch (error) {
+//             if (axios.isAxiosError(error) && error.response) {
+//                 expect(error.response.status).toBe(401);
+//                 expect(error.response.data).toBe('Invalid token');
+//             } else {
+//                 throw error;
+//             }
+//         }
+//     });
+
+//     test('server error', async () => {
+//         const mockError = {
+//             response: {
+//                 status: 500,
+//                 data: 'Internal server error'
+//             }
+//         };
+
+//         mockedAxios.get.mockRejectedValueOnce(mockError);
+
+//         try {
+//             await retrieveOrder('testOrderUid', 'testToken');
+//             fail('Did not throw expected error');
+//         } catch (error) {
+//             if (axios.isAxiosError(error) && error.response) {
+//                 expect(error.response.status).toBe(500);
+//                 expect(error.response.data).toBe('Internal server error');
+//             } else {
+//                 throw error;
+//             }
+//         }
+//     });
+// });
