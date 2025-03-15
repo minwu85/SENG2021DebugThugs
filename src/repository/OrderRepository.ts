@@ -16,7 +16,10 @@ export class OrderRepository {
     return OrderRepository.orders.filter(o => o.personUid === personUid);
   }
   
-  clear() {
+  public clear(): void {
     this.orders.clear(); // Clears all stored orders
+  }
+  findAll() {
+    return this.orders;
   }
 }
