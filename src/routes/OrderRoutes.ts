@@ -15,6 +15,7 @@ router.post('/v1/order/create', createOrder);
 
 // GET /api/order/:invoiceUid
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
+router.get('/v1/order/retrieve/:orderUid', getOrderByInvoiceUid);
 
 router.get('/v1/order/fetchxml:orderUid', fetchXml);
 

@@ -24,7 +24,7 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
 }
 
 // GET /api/order/:invoiceUid
-export async function getOrderByInvoiceUid(req: Request, res: Response) {
+export async function getOrderByInvoiceUid(req: Request, res: Response): Promise <any> {
   try {
     const { invoiceUid } = req.params;
     const order = await orderService.getOrderByUid(invoiceUid);
@@ -50,7 +50,7 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
 }
 
 // GET /api/order/person/:personUid
-export async function getAllOrdersByPersonUid(req: Request, res: Response) {
+export async function getAllOrdersByPersonUid(req: Request, res: Response): Promise <any> {
   try {
     const { personUid } = req.params;
     const orders = await orderService.getAllOrdersByPersonUid(personUid);
