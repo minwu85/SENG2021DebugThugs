@@ -10,15 +10,25 @@ const SERVER_URL = `http://localhost:${PORT}`;
 
 
 
-
+const mockOrderData = {
+    itemId: 'itemId1',
+    itemQuantity: 4,
+    itemSeller: 'seller1'
+};
 
 
 describe('retrieveOrder', () => {
     // let token: string;
     beforeEach(async () => {
-        
+        jest.clearAllMocks();
 
     });
+
+    afterAll(async () => {
+        await closeServer(server);
+    });
+
+
     // no working rn
     test('successful order retrieval', async () => {
         const mockOrderData = {
@@ -27,6 +37,7 @@ describe('retrieveOrder', () => {
             itemSeller: 'seller1'
         }
         const reg = await registerUserRequest('uName', 'pWord', 'email@email.com');
+        console.log('Registration response:', reg);
         const token = reg.data.token;
         // const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data;
         const order1 = await createOrder(
@@ -35,8 +46,6 @@ describe('retrieveOrder', () => {
             [mockOrderData], 
             'details'
         );
-
-
         const result = await retrieveOrder(order1.data.result, token)
         expect(result.statusCode).toStrictEqual(200);
         expect(order1.data).toStrictEqual(mockOrderData);
@@ -77,9 +86,6 @@ describe('retrieveOrder', () => {
     //     expect(result).toStrictEqual(mockResponseData);
     
     // });
-    afterAll(async () => {
-        await closeServer(server);
-    });
 });
 
 
