@@ -2,6 +2,8 @@ import axios from 'axios';
 import { PORT, server } from '../../index'
 import { closeServer, createOrder, fetchXmlRequest, registerUserRequest } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
+import { Order } from '../../domain/Order';
+import { OrderRepository } from '../../repository/OrderRepository';
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -39,6 +41,12 @@ describe('fetchXml', () => {
 
     expect(res.status).toBe(200);
     expect(res.data).toStrictEqual(expect.any(String));
+
+    // check xml was added to order object in repo
+    const orderRepo = new OrderRepository();
+    const findOrder = orderRepo.findByOrderUid(orderUid);
+    const xmlOrder = findOrder?.xml;
+    expect(xmlOrder).toStrictEqual(expect.any(String));
   });
 
   afterAll(async () => {

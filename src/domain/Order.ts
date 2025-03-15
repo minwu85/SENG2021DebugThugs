@@ -4,7 +4,8 @@ export class Order {
     public personUid: string,     // GUID of Person
     public status: 'Pending' | 'Completed' | 'Deleted',
     public itemList?: Item[], 
-    public invoiceDetails?: any   // Additional fields for invoice data, etc.
+    public invoiceDetails?: any,   // Additional fields for invoice data, etc.
+    public xml?: string           // the xml for the order
   ) {}
 }
 
