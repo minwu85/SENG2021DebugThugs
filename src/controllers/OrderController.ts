@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
 import orderRoutes from '../routes/OrderRoutes';
-
+import { OrderRepository } from '../repository/OrderRepository';
 const orderService = new OrderService();
 
 // POST /api/order
@@ -13,24 +13,13 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
   if (!token) {
     res.status(401).json({ error: 'Token is required' });
   }
-
+  
   try {
-    const orderId = await orderService.createOrder(token, personUid, itemList,
+    const result = await orderService.createOrder(token, personUid, itemList,
       invoiceDetails);
-    res.status(200).json({ orderId });
+    res.status(200).json({ result });
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
-}
-
-export async function saveOrder(req: Request, res: Response) {
-  try {
-    const { personUid, status, invoiceDetails } = req.body;
-    const savedOrder = await orderService.saveOrder(personUid, status, invoiceDetails);
-    return res.status(201).json(savedOrder);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Unable to save order' });
   }
 }
 
@@ -48,15 +37,66 @@ export async function getOrderByInvoiceUid(req: Request, res: Response) {
     return res.status(500).json({ error: 'Unable to get order' });
   }
 }
+<<<<<<< HEAD
 
-// GET /api/order/person/:personUid
-export async function getAllOrdersByPersonUid(req: Request, res: Response) : Promise <any> {
+export async function fetchXml(req: Request, res: Response): Promise <any> {
+  const { orderUid } = req.params;
+
   try {
-    const { personUid } = req.params;
-    const orders = await orderService.getAllOrdersByPersonUid(personUid);
-    return res.json(orders);
+    const result = await orderService.fetchXml(orderUid);
+    return res.status(200).json(result);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Unable to get orders' });
+    return res.status(500).json(error.message);
   }
 }
+
+// GET /api/order/person/:personUid
+export async function getAllOrdersByPersonUid(req: Request, res: Response) {
+=======
+export const getAllOrdersByPersonUid = async (req: Request, res: Response): Promise<void> => {
+>>>>>>> s2/mw/clear
+  try {
+    const { personUid } = req.params;
+    const repo = new OrderRepository();
+
+    // Use the correct method: findAllByPersonUid
+    const orders = repo.findAllByPersonUid(personUid);
+    
+    res.status(200).json({ orders });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// DELETE /api/order/cancel
+export const cancelOrder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { orderUid } = req.body;
+    const repo = new OrderRepository();
+    
+    const order = repo.findByOrderUid(orderUid);
+    if (!order || order.status === 'Deleted') {
+      res.status(400).json({ error: 'Order not found or already canceled' });
+      return;
+    }
+
+    order.status = 'Deleted';
+    res.status(200).json({ message: 'Order canceled successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+    throw error
+  }
+};
+
+// DELETE /api/order/clear
+export const clearOrder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const repo = new OrderRepository();
+    repo.clear();
+    res.status(200).json({ message: 'All orders cleared successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+

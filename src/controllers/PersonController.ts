@@ -1,17 +1,28 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { PersonService } from '../services/PersonService';
 
 const personService = new PersonService();
 
 // POST /api/person
-export async function savePerson(req: Request, res: Response) {
+export async function registerUser(req: Request, res: Response): Promise <any> {
+  const { username, password, email } = req.body;
+  
   try {
-    const { username, password, email } = req.body;
-    const newPerson = await personService.savePerson(username, password, email);
-    return res.status(201).json(newPerson);
+    const result = await personService.registerUser(username, password, email);
+    return res.status(200).json(result);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Unable to save person' });
+    return res.status(401).json({ error: error.message });
+  }
+}
+
+export async function loginUser(req: Request, res: Response): Promise <any> {
+  const { userInput, password } = req.body;
+
+  try {
+    const result = await personService.loginUser(userInput, password);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(401).json({ error: error.message });
   }
 }
 
@@ -42,5 +53,20 @@ export async function getPersonByEmail(req: Request, res: Response) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Unable to get person' });
+  }
+}
+
+export async function logoutUser(req: Request, res: Response): Promise <any> {
+  const token = req.header('token') as string;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token is required' });
+  }
+
+  try {
+    const result = await personService.logoutUser(token);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 }

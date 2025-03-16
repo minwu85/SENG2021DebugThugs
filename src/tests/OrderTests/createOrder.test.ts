@@ -1,19 +1,27 @@
-import { Item, Order } from "../../domain/Order";
-import axios from 'axios';
-import { PORT } from '../../index'
+import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
+import { closeServer, createOrder, registerUserRequest } from "../testHelper";
+import { SessionRepository } from "../../repository/PersonRepository";
 
 const SERVER_URL = `http://localhost:${PORT}`;
 
 describe('createOrder', () => {
-  beforeEach(() => {
+  let token;
+  let personUid;
+  beforeEach(async () => {
     // insert clear function
+
+    const register = await registerUserRequest('user', 'password', 'email');
+    token = register.data;
+
+    const sessionRepo = new SessionRepository();
+    personUid = sessionRepo.findPersonUidFromToken(token);
   });
 
   test('successful order creation', async () => {
       const res = await createOrder(
-        'test',
-        'test',
+        token,
+        personUid,
         [
           {
             itemId: 'itemId',
@@ -25,34 +33,15 @@ describe('createOrder', () => {
       )
 
       expect(res.status).toBe(200);
-      expect(res.data.orderId).toStrictEqual(expect.any(String));
+      expect(res.data.result).toStrictEqual(expect.any(String));
       
       // check has been added to repo
       const repo = new OrderRepository;
-      const find = repo.findByOrderUid(res.data.orderId);
+      const find = repo.findByOrderUid(res.data.result);
       expect(find).toBeDefined();
   });
-});
 
-async function createOrder(
-  token: string,
-  personUid: string,
-  itemList?: Item[],
-  invoiceDetails?: any
-  ) {
-    try {
-      const res = await axios.post(
-        `${SERVER_URL}/api/order/v1/order/create`,
-        {
-          personUid, itemList, invoiceDetails
-        },
-        {
-          headers: { token },
-          timeout: 5 * 1000
-        }
-      );
-      return res;
-    } catch (error) {
-      throw error;
-    }
-}
+  afterAll(async () => {
+    await closeServer(server);
+  });
+});
