@@ -37,7 +37,6 @@ export async function getOrderByInvoiceUid(req: Request, res: Response) {
     return res.status(500).json({ error: 'Unable to get order' });
   }
 }
-<<<<<<< HEAD
 
 export async function fetchXml(req: Request, res: Response): Promise <any> {
   const { orderUid } = req.params;
@@ -51,10 +50,7 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
 }
 
 // GET /api/order/person/:personUid
-export async function getAllOrdersByPersonUid(req: Request, res: Response) {
-=======
 export const getAllOrdersByPersonUid = async (req: Request, res: Response): Promise<void> => {
->>>>>>> s2/mw/clear
   try {
     const { personUid } = req.params;
     const repo = new OrderRepository();

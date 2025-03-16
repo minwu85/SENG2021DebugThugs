@@ -37,7 +37,6 @@ router.get('/person/:personUid', getAllOrdersByPersonUid);
 router.delete('/v1/order/cancel', cancelOrder);
 console.log('Cancel order route registered');
 
-<<<<<<< HEAD
 // DELETE /v1/clear
 router.delete('/v1/clear', (req, res) => {
   try {
@@ -50,10 +49,8 @@ router.delete('/v1/clear', (req, res) => {
 });
 
 console.log('Clear database route registered');
-=======
 // DELETE /api/order/clear
 router.delete('/v1/clear', clearOrder);
 console.log('Clear order route registered');
->>>>>>> s2/mw/cancelOrder
 
 export default router;
