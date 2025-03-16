@@ -99,3 +99,19 @@ export async function logoutUserReq(token: string) {
     throw error;
   }
 }
+
+
+export async function retrieveOrder(orderUid: string, token: string) {
+  try {
+      const res = await axios.get(
+          `${SERVER_URL}/order/create/test/${orderUid}`,
+          {
+              headers: {token},
+              timeout: 5 * 1000
+          }
+      );
+      return res.data;
+  } catch (error) {
+     throw error;        
+  }
+}
