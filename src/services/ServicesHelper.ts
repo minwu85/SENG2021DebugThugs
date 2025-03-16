@@ -23,7 +23,7 @@ export class Validation {
   }
 
   // finds user from email or username
-  public findUser(userInput): Person {
+  public findUser(userInput: any): Person {
     let user = this.personRepo.findByUsername(userInput);
     if (!user) {
       user = this.personRepo.findByEmail(userInput);
