@@ -3,8 +3,18 @@ import {
   getOrderByInvoiceUid,
   getAllOrdersByPersonUid,
   createOrder,
+<<<<<<< HEAD
+<<<<<<< HEAD
   fetchXml
+=======
+  cancelOrder 
+>>>>>>> s2/mw/clear
+=======
+  cancelOrder,
+  clearOrder,
+>>>>>>> s2/mw/cancelOrder
 } from '../controllers/OrderController';
+import { OrderRepository } from '../repository/OrderRepository';
 
 const router = Router();
 
@@ -19,6 +29,29 @@ router.post('/v1/order/create', createOrder);
 router.get('/v1/order/fetchxml:orderUid', fetchXml);
 
 // GET /api/order/person/:personUid
-// router.get('/person/:personUid', getAllOrdersByPersonUid);
+router.get('/person/:personUid', getAllOrdersByPersonUid);
+
+// GET /api/order/cancel
+router.delete('/v1/order/cancel', cancelOrder);
+console.log('Cancel order route registered');
+
+<<<<<<< HEAD
+// DELETE /v1/clear
+router.delete('/v1/clear', (req, res) => {
+  try {
+    const repo = new OrderRepository();
+    repo.clear(); // Clear all stored orders
+    res.status(200).json({ message: 'Database cleared successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+console.log('Clear database route registered');
+=======
+// DELETE /api/order/clear
+router.delete('/v1/clear', clearOrder);
+console.log('Clear order route registered');
+>>>>>>> s2/mw/cancelOrder
 
 export default router;
