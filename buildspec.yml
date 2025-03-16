@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm install
+  build:
+    commands:
+      - npm run build
+
+artifacts:
+  files:
+    - dist/**/*         # Include compiled JS files
+    - package.json
+    - package-lock.json
+    # any other files EB needs, e.g. .ebextensions/ if used
