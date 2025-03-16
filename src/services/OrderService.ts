@@ -82,7 +82,7 @@ export class OrderService {
     return orderXml;
   }
 
-  public async getOrderByUid(orderUid: string): Promise<Order | null> {
+  public async retriveOrderService(orderUid: string): Promise<Order | null> {
     return this.orderRepo.findByOrderUid(orderUid);
   }
 

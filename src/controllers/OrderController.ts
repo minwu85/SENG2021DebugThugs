@@ -24,14 +24,14 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
 }
 
 // GET /api/order/:invoiceUid
-export async function getOrderByInvoiceUid(req: Request, res: Response) {
+export async function retrieveOrder(req: Request, res: Response): Promise <any> {
   try {
     const { invoiceUid } = req.params;
-    const order = await orderService.getOrderByUid(invoiceUid);
+    const order = await orderService.retriveOrderService(invoiceUid);
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    return res.json(order);
+    return res.status(200).json(order);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Unable to get order' });

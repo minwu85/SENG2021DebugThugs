@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  getOrderByInvoiceUid,
+  retrieveOrder,
   getAllOrdersByPersonUid,
   createOrder,
   fetchXml
@@ -14,7 +14,7 @@ const router = Router();
 router.post('/v1/order/create', createOrder);
 
 // GET /api/order/:invoiceUid
-// router.get('/:invoiceUid', getOrderByInvoiceUid);
+router.get('/:invoiceUid', retrieveOrder);
 
 router.get('/v1/order/fetchxml:orderUid', fetchXml);
 
