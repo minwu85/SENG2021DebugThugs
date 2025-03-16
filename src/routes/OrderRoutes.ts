@@ -3,16 +3,9 @@ import {
   getOrderByInvoiceUid,
   getAllOrdersByPersonUid,
   createOrder,
-<<<<<<< HEAD
-<<<<<<< HEAD
-  fetchXml
-=======
-  cancelOrder 
->>>>>>> s2/mw/clear
-=======
-  cancelOrder,
+  fetchXml,
+  cancelOrder, 
   clearOrder,
->>>>>>> s2/mw/cancelOrder
 } from '../controllers/OrderController';
 import { OrderRepository } from '../repository/OrderRepository';
 
