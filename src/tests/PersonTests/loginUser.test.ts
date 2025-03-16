@@ -2,6 +2,7 @@ import { server } from '../../index'
 import { SessionRepository } from "../../repository/PersonRepository";
 import { closeServer } from '../testHelper'
 import { registerUserRequest, loginUserRequest } from '../testHelper'
+import { expect } from '@jest/globals';
 
 describe('loginUser', () => {
   beforeEach(async () => {

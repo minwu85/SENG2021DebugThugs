@@ -4,9 +4,12 @@ import { jest } from '@jest/globals';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 import { OrderRepository } from "../../repository/OrderRepository";
-import { closeServer, createOrder, registerUserRequest, retrieveOrder } from "../testHelper"
-import { PORT, server } from "../..";
-const SERVER_URL = `http://localhost:${PORT}`;
+import {createOrder,retrieveOrder } from "../testHelper"
+import { server } from '../../index'
+import { PersonRepository, SessionRepository } from "../../repository/PersonRepository";
+import { closeServer } from '../testHelper'
+import { registerUserRequest } from '../testHelper'
+import { expect } from '@jest/globals';
 
 
 
@@ -36,9 +39,11 @@ describe('retrieveOrder', () => {
             itemQuantity: 4,
             itemSeller: 'seller1'
         }
-        const reg = await registerUserRequest('uName', 'pWord', 'email@email.com');
-        console.log('Registration response:', reg);
-        const token = reg.data.token;
+        const res = await registerUserRequest('uName', 'pWord', 'email@email.com');
+        expect(res.status).toBe(200);
+        expect(res.data).toStrictEqual(expect.any(String));
+        console.log('Registration response:', res);
+        const token = res.data;
         // const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data;
         const order1 = await createOrder(
             token, 

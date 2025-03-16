@@ -6,7 +6,6 @@ const personService = new PersonService();
 // POST /api/person
 export async function registerUser(req: Request, res: Response): Promise <any> {
   const { username, password, email } = req.body;
-  
   try {
     const result = await personService.registerUser(username, password, email);
     return res.status(200).json(result);
