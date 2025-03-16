@@ -15,9 +15,15 @@ export class OrderRepository {
   public findAllByPersonUid(personUid: string): Order[] {
     return OrderRepository.orders.filter(o => o.personUid === personUid);
   }
+<<<<<<< HEAD
   
   public clear(): void {
     this.orders.clear(); // Clears all stored orders
+=======
+ 
+  public clear(): void {
+    OrderRepository.orders = []; // Clears all stored orders
+>>>>>>> s2/mw/cancelOrder
   }
   findAll() {
     return this.orders;
