@@ -4,8 +4,8 @@ import {
   getAllOrdersByPersonUid,
   createOrder,
   fetchXml,
-  cancelOrder, 
-  clearOrder,
+  cancelOrder,
+  clearOrder
 } from '../controllers/OrderController';
 import { OrderRepository } from '../repository/OrderRepository';
 

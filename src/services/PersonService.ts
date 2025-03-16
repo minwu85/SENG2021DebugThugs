@@ -46,14 +46,22 @@ export class PersonService {
     try {
       user = validation.findUser(userInput);
     } catch (error) {
-      throw new Error (error.message);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Unknown error');
+      }
     }
 
     // check password is correct
     try {
       validation.validatePassword(user, password);
     } catch (error) {
-      throw new Error(error.message);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Unknown error');
+      }
     }
 
     // start a new session for this user
@@ -76,7 +84,11 @@ export class PersonService {
     try {
       validateToken.validateToken(token, personUid);
     } catch (error) {
-      throw new Error('Invalid token');
+      if (error instanceof Error) {
+        throw new Error('Invalid token');
+      } else {
+        throw new Error('Unknown error');
+      }
     }
 
     this.sessionRepo.endSession(token);

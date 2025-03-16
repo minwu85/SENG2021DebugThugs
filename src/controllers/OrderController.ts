@@ -18,8 +18,12 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
     const result = await orderService.createOrder(token, personUid, itemList,
       invoiceDetails);
     res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (error ) {
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+  } else {
+      res.status(400).json({ message: 'Unknown error' });
+  }
   }
 }
 
@@ -45,11 +49,16 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
     const result = await orderService.fetchXml(orderUid);
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+  } else {
+      return res.status(500).json('Unknown error');
+  }
   }
 }
 
 // GET /api/order/person/:personUid
+
 export const getAllOrdersByPersonUid = async (req: Request, res: Response): Promise<void> => {
   try {
     const { personUid } = req.params;
