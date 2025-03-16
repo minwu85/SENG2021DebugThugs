@@ -6,8 +6,8 @@ import { SessionRepository } from "../../repository/PersonRepository";
 const SERVER_URL = `http://localhost:${PORT}`;
 
 describe('createOrder', () => {
-  let token;
-  let personUid;
+  let token: string;
+  let personUid: string;
   beforeEach(async () => {
     // insert clear function
 
@@ -15,7 +15,11 @@ describe('createOrder', () => {
     token = register.data;
 
     const sessionRepo = new SessionRepository();
-    personUid = sessionRepo.findPersonUidFromToken(token);
+    const uid = sessionRepo.findPersonUidFromToken(token);
+    if (uid === null) {
+      throw new Error('Person UID not found');
+    }
+    personUid = uid;
   });
 
   test('successful order creation', async () => {

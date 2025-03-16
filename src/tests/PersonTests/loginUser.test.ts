@@ -27,8 +27,13 @@ describe('loginUser', () => {
       await loginUserRequest('email', 'wrongpassword');
       fail('Did not throw expected error');
     } catch (error) {
-      expect(error.response.status).toBe(401);
-      expect(error.response.data).toStrictEqual({ error: expect.any(String) });
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
     }
   });
 
@@ -37,8 +42,13 @@ describe('loginUser', () => {
       await loginUserRequest('wrongemail', 'password');
       fail('Did not throw expected error');
     } catch (error) {
-      expect(error.response.status).toBe(401);
-      expect(error.response.data).toStrictEqual({ error: expect.any(String) });
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
     }
   });
 

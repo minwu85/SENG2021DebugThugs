@@ -8,9 +8,9 @@ import { OrderRepository } from '../../repository/OrderRepository';
 const SERVER_URL = `http://localhost:${PORT}`;
 
 describe('fetchXml', () => {
-  let token;
-  let personUid;
-  let orderUid;
+  let token: string;
+  let personUid: string;
+  let orderUid: string;
   beforeEach(async () => {
     // insert clear function
 
@@ -18,7 +18,11 @@ describe('fetchXml', () => {
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
     const sessionRepo = new SessionRepository();
-    personUid = sessionRepo.findPersonUidFromToken(token);
+    const uid = sessionRepo.findPersonUidFromToken(token);
+    if (uid === null) {
+      throw new Error('Person UID not found');
+    }
+    personUid = uid;
 
     // create order
     const order = await createOrder(
@@ -58,8 +62,13 @@ describe('fetchXml', () => {
       await fetchXmlRequest('wrongorderuid');
       fail('Did not throw expected error');
     } catch (error) {
-      expect(error.response.status).toBe(500);
-      expect(error.response.data).toStrictEqual(expect.any(String));
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(500);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
     }
   });
 });
