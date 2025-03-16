@@ -89,4 +89,16 @@ export class OrderService {
   public async getAllOrdersByPersonUid(personUid: string): Promise<Order[]> {
     return this.orderRepo.findAllByPersonUid(personUid);
   }
+
+  public async cancelOrder(orderUid: string): Promise<boolean> {
+    const order = this.orderRepo.findByOrderUid(orderUid);
+
+    if (!order || order.status === 'Deleted') {
+      return false;
+    }
+    order.status = 'Deleted';
+    return true;
+  }
+  
+
 }

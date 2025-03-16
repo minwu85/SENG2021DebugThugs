@@ -6,6 +6,7 @@ import * as YAML from 'yamljs';
 
 import personRoutes from './routes/PersonRoutes';
 import orderRoutes from './routes/OrderRoutes';
+import adminRoutes from './routes/AdminRoutes';
 import * as cors from 'cors';
 import { Application } from 'express';
 
@@ -28,6 +29,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Routes
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api', adminRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
