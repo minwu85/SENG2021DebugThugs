@@ -1,44 +1,47 @@
 import { Person, Session } from '../domain/Person';
+import { pool } from '../database/DatabaseConnection';
 import { v4 as uuidv4 } from 'uuid';
+import { emailFind, personFromToken, savePerson, usernameFind } from '../database/databaseHelpers';
 
 export class PersonRepository {
-  private static persons: Person[] = [];
-
-  public save(person: Person): Person {
-    PersonRepository.persons.push(person);
+  public async save(person: Person): Promise<Person> {
+    await savePerson(person);
     return person;
   }
 
-  public findByUsername(username: string): Person | null {
-    const found = PersonRepository.persons.find(p => p.username === username);
-    return found || null;
+  public async findByUsername(username: string): Promise<Person | null> {
+    const person = await usernameFind(username);
+    return person;
   }
 
-  public findByEmail(email: string): Person | null {
-    const found = PersonRepository.persons.find(p => p.email === email);
-    return found || null;
+  public async findByEmail(email: string): Promise<Person | null> {
+    const person = emailFind(email);
+    return person;
   }
 }
 
 export class SessionRepository {
-  private static sessions:  Session [] = [];
-
-  public findPersonUidFromToken(token: string): string | null {
-    const found = SessionRepository.sessions.find(i => i.token === token);
-    return found?.personUid || null;
+  public async findPersonUidFromToken(token: string): Promise<string | null> {
+    const person = await personFromToken(token);
+    return person;
   }
 
-  public startSession(personUid: string): string {
+  public async startSession(personUid: string): Promise<string> {
     const token = uuidv4();
-    const session = new Session (token, personUid);
 
-    SessionRepository.sessions.push(session);
+    const sql = `
+      INSERT INTO sessions (token, personUid)
+      VALUES (?, ?)
+    `;
+    await pool.query(sql, [token, personUid]);
 
     return token;
   }
 
-  public endSession(token: string): void {
-    SessionRepository.sessions = SessionRepository.sessions.filter(
-      session => session.token !== token);
+  public async endSession(token: string): Promise<void> {
+    await pool.query(`
+      DELETE FROM sessions
+      WHERE token = ?
+    `, [token]);
   }
 }

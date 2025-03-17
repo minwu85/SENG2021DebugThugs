@@ -1,11 +1,14 @@
-import { server } from '../../index'
+import axios from 'axios';
+import { PORT, server } from '../../index'
 import { PersonRepository, SessionRepository } from "../../repository/PersonRepository";
 import { closeServer } from '../testHelper'
 import { registerUserRequest } from '../testHelper'
 
+const SERVER_URL = `http://localhost:${PORT}`;
+
 describe('registerUser', () => {
-  beforeEach(() => {
-    // insert clear function
+  beforeEach(async () => {
+    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
   });
 
   test('successful registration', async () => {
@@ -21,7 +24,7 @@ describe('registerUser', () => {
       expect(findPerson).toBeDefined();
 
       const repoS = new SessionRepository;
-      const findSession = repoS.findPersonUidFromToken(res.data);
+      const findSession = await repoS.findPersonUidFromToken(res.data);
       expect(findSession).toStrictEqual(expect.any(String));
   });
 

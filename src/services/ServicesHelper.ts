@@ -10,11 +10,11 @@ export class Validation {
     this.personRepo = new PersonRepository();
   }
 
-  public validateToken(
+  public async validateToken(
     token: string,
     personUid: string
   ) {
-    const foundPersonUid = this.sessionRepo.findPersonUidFromToken(token);
+    const foundPersonUid = await this.sessionRepo.findPersonUidFromToken(token);
     if (!foundPersonUid) {
       throw new Error('This token does not exist');
     } else if (foundPersonUid !== personUid) {
@@ -23,10 +23,10 @@ export class Validation {
   }
 
   // finds user from email or username
-  public findUser(userInput: any): Person {
-    let user = this.personRepo.findByUsername(userInput);
+  public async findUser(userInput: any): Promise <Person> {
+    let user = await this.personRepo.findByUsername(userInput);
     if (!user) {
-      user = this.personRepo.findByEmail(userInput);
+      user = await this.personRepo.findByEmail(userInput);
     }
     if (!user) {
       throw new Error('User not found');

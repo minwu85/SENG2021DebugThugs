@@ -13,12 +13,13 @@ describe('fetchXml', () => {
   let orderUid: string;
   beforeEach(async () => {
     // insert clear function
+    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
 
-    // register user
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
+
     const sessionRepo = new SessionRepository();
-    const uid = sessionRepo.findPersonUidFromToken(token);
+    const uid = await sessionRepo.findPersonUidFromToken(token);
     if (uid === null) {
       throw new Error('Person UID not found');
     }
@@ -35,7 +36,7 @@ describe('fetchXml', () => {
           itemSeller: 'seller'
         }
       ],
-      'details'
+      '{"details": "Valid invoice details"}'
     );
     orderUid = order.data.result;
   });
@@ -48,7 +49,8 @@ describe('fetchXml', () => {
 
     // check xml was added to order object in repo
     const orderRepo = new OrderRepository();
-    const findOrder = orderRepo.findByOrderUid(orderUid);
+    const findOrder = await orderRepo.findByOrderUid(orderUid);
+
     const xmlOrder = findOrder?.xml;
     expect(xmlOrder).toStrictEqual(expect.any(String));
   });
