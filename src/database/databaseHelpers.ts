@@ -142,3 +142,87 @@ export async function getSession(token: string): Promise<Session | null> {
   const row: any = (rows as any[])[0];
   return new Session(row.token, row.personUid);
 }
+
+export async function getAllOrdersByPersonUid(personUid: string): Promise<Order[]> {
+  // Fetch all orders for the person
+  const [orderRows] = await pool.query(`
+    SELECT orderUid, personUid, status, invoiceDetails, xml
+    FROM orders
+    WHERE personUid = ?
+  `, [personUid]);
+
+  // Build an array of Order objects
+  const orders: Order[] = [];
+
+  for (const row of orderRows as any[]) {
+    // Fetch items for each order
+    const [itemRows] = await pool.query(`
+      SELECT itemId, itemQuantity, itemSeller, itemType, itemPrice, priceDiscount
+      FROM items
+      WHERE orderUid = ?
+    `, [row.orderUid]);
+
+    const items: Item[] = (itemRows as any[]).map((r) => {
+      return new Item(
+        r.itemId,
+        r.itemQuantity,
+        r.itemSeller,
+        r.itemType ? JSON.parse(r.itemType) : undefined,
+        r.itemPrice,
+        r.priceDiscount
+      );
+    });
+
+    const order = new Order(
+      row.orderUid,
+      row.personUid,
+      row.status,
+      items,
+      row.invoiceDetails ? JSON.parse(row.invoiceDetails) : undefined,
+      row.xml
+    );
+    orders.push(order);
+  }
+
+  return orders;
+}
+
+export async function getPersonByUsername(username: string): Promise<Person | null> {
+  const [rows] = await pool.query(`
+    SELECT personUid, username, password, email
+    FROM persons
+    WHERE username = ?
+  `, [username]);
+
+  if ((rows as any[]).length === 0) {
+    return null;
+  }
+
+  const row: any = (rows as any[])[0];
+  return new Person(
+    row.personUid,
+    row.username,
+    row.password,
+    row.email
+  );
+}
+
+export async function getPersonByEmail(email: string): Promise<Person | null> {
+  const [rows] = await pool.query(`
+    SELECT personUid, username, password, email
+    FROM persons
+    WHERE email = ?
+  `, [email]);
+
+  if ((rows as any[]).length === 0) {
+    return null;
+  }
+
+  const row: any = (rows as any[])[0];
+  return new Person(
+    row.personUid,
+    row.username,
+    row.password,
+    row.email
+  );
+}

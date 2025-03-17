@@ -1,0 +1,248 @@
+swagger: "2.0"
+info:
+  title: Order and Admin API
+  version: "1.0.0"
+  description: API documentation for order management and admin functionalities.
+
+paths:
+  /v1/order/create:
+    post:
+      summary: Creates an order
+      parameters:
+        - in: body
+          name: itemList
+          required: true
+          schema:
+            type: object
+            description: An object containing all items to be added to the order and their prices
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+
+  /v1/order/retrieve/all:
+    get:
+      summary: Gets and lists the details of all orders
+      parameters:
+        - name: personUid
+          in: query
+          required: true
+          type: string
+          format: uuid
+          description: GUID of the person
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/order/retrieve:
+    get:
+      summary: Gets and lists the details of a specific order
+      parameters:
+        - name: orderUid
+          in: query
+          required: true
+          type: string
+          format: uuid
+          description: GUID of the order
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/order/update:
+    put:
+      summary: Updates the details of an order
+      parameters:
+        - in: body
+          name: itemList
+          required: true
+          schema:
+            type: object
+            description: An object containing all items to be added to the order and their prices
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+
+  /v1/order/cancel:
+    delete:
+      summary: Cancels an order
+      parameters:
+        - name: orderUid
+          in: query
+          required: true
+          type: string
+          format: uuid
+          description: GUID of the order
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+
+  /v1/admin:
+    post:
+      summary: Get current user
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+
+  /v1/admin/register:
+    post:
+      summary: Registers an admin user
+      parameters:
+        - in: body
+          name: admin
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+              nameFirst:
+                type: string
+              nameLast:
+                type: string
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+
+  /v1/admin/login:
+    post:
+      summary: Logs in a registered user
+      parameters:
+        - in: body
+          name: login
+          required: true
+          schema:
+            type: object
+            properties:
+              any:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+
+  /v1/admin/getdetails:
+    get:
+      summary: Retrieves all stored user details
+      parameters:
+        - name: token
+          in: query
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/admin/logout:
+    delete:
+      summary: Logs out a user and ends session
+      parameters:
+        - name: token
+          in: query
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/admin/password:
+    put:
+      summary: Updates the password of a registered user
+      parameters:
+        - in: body
+          name: passwordUpdate
+          required: true
+          schema:
+            type: object
+            properties:
+              any:
+                type: string
+              oldPassword:
+                type: string
+              newPassword:
+                type: string
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/admin/email:
+    put:
+      summary: Updates the email of a registered user
+      parameters:
+        - in: body
+          name: emailUpdate
+          required: true
+          schema:
+            type: object
+            properties:
+              any:
+                type: string
+              password:
+                type: string
+              newEmail:
+                type: string
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/admin/username:
+    put:
+      summary: Updates the username of a registered user
+      parameters:
+        - in: body
+          name: usernameUpdate
+          required: true
+          schema:
+            type: object
+            properties:
+              any:
+                type: string
+              password:
+                type: string
+              newUsername:
+                type: string
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+
+  /v1/clear:
+    delete:
+      summary: Clears database
+      responses:
+        200:
+          description: Successful
