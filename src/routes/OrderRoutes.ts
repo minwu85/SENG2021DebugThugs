@@ -16,6 +16,8 @@ const router = Router();
 
 router.post('/v1/order/create', createOrder);
 
+router.get('/v1/order/retrieve/all', getAllOrdersByPersonUid);
+
 // GET /api/order/:invoiceUid
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
 
@@ -28,9 +30,8 @@ router.get('/person/:personUid', getAllOrdersByPersonUid);
 router.delete('/v1/order/cancel', cancelOrder);
 console.log('Cancel order route registered');
 
-// DELETE /v1/clear
+// DELETE /api/order/clear
 router.delete('/v1/clear', clearOrder);
 console.log('Clear order route registered');
-
 
 export default router;
