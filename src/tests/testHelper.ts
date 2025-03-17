@@ -59,7 +59,7 @@ export async function createOrder(
   ) {
     try {
       const res = await axios.post(
-        `${SERVER_URL}/api/order/v1/order/create`,
+        `${SERVER_URL}/api/order/v1/order/create`, // check this route
         {
           personUid, itemList, invoiceDetails
         },
@@ -103,7 +103,7 @@ export async function logoutUserReq(token: string) {
 export async function retrieveOrder(orderUid: string, token: string) {
   try {
       const res = await axios.get(
-          `${SERVER_URL}/api/order/v1/order/retreive/retrieveOrder${orderUid}`,
+          `${SERVER_URL}/api/v1/order/retreive/${orderUid}`,
           {
               headers: {token},
               timeout: 5 * 1000

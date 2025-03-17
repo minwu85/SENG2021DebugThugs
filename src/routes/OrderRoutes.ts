@@ -14,7 +14,7 @@ const router = Router();
 router.post('/v1/order/create', createOrder);
 
 // GET /api/order/:invoiceUid
-router.get('/v1/order/retreive/retrieveOrder:invoiceUid', retrieveOrder);
+router.get('/v1/order/retrieve/:invoiceUid', retrieveOrder);
 
 router.get('/v1/order/fetchxml:orderUid', fetchXml);
 
