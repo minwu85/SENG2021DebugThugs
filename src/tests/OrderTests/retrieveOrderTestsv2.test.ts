@@ -7,9 +7,15 @@ import { registerUserRequest } from '../testHelper'
 
 
 describe('registerUser', () => {
-  // beforeEach(() => {
-  //   // insert clear function
-  // });
+  let token;
+  let personUid;
+  beforeEach(async () => {
+    // insert clear function
+    // const register = await registerUserRequest('user', 'password', 'email');
+    // const token = register.data;
+    const sessionRepo = new SessionRepository();
+    personUid = sessionRepo.findPersonUidFromToken(token);
+  });
 
   test('successful registration', async () => {
     const mockOrderData = {
@@ -44,18 +50,29 @@ describe('registerUser', () => {
       // expect(findPerson).not.toBeNull();
       // expect(findPerson).toBeDefined();
 
-      // const repoS = new SessionRepository;
-      // const findSession = repoS.findPersonUidFromToken(token);
-      // // expect(findSession).toStrictEqual(expect.any(String));
+      // const repoS = new SessionRepository();
+      // const personUid = repoS.findPersonUidFromToken(token);
+      // expect(findSession).toStrictEqual(expect.any(String));
 
-
+    const order = await createOrderReq(
+      token,
+      personUid,
+      [
+        {
+          itemId: 'itemId',
+          itemQuantity: 2,
+          itemSeller: 'seller'
+        }
+      ],
+      'details'
+    );
       
-      const order1 =  createOrderReq(
-        token, 
-        'personUId test', 
-        [mockOrderData], 
-        'details'
-      );
+      // const order1 =  createOrderReq(
+      //   token, 
+      //   'personUId test', 
+      //   [mockOrderData], 
+      //   'details'
+      // );
 
 
 
@@ -70,3 +87,49 @@ describe('registerUser', () => {
     await closeServer(server);
   });
 });
+
+
+
+// describe('fetchXml', () => {
+//   let token;
+//   let personUid;
+//   let orderUid;
+//   beforeEach(async () => {
+//     // insert clear function
+
+//     // register user
+//     const register = await registerUserRequest('user', 'password', 'email');
+//     token = register.data;
+//     const sessionRepo = new SessionRepository();
+//     personUid = sessionRepo.findPersonUidFromToken(token);
+    
+
+//   });
+
+//   test('successful xml return', async () => {
+//     const mockOrderData = {
+//       itemId: 'itemId1',
+//       itemQuantity: 4,
+//       itemSeller: 'seller1'
+//     }
+//     const order1 = await createOrderReq(
+//       token,
+//       personUid,
+//       [
+//         {
+//           itemId: 'itemId',
+//           itemQuantity: 2,
+//           itemSeller: 'seller'
+//         }
+//       ],
+//       'details'
+//     );
+//     const result = await retrieveOrder(order1.data.result, token)
+//     expect(result.statusCode).toStrictEqual(200);
+//     expect(order1.data).toStrictEqual(mockOrderData);
+//   });
+
+//   afterAll(async () => {
+//     await closeServer(server);
+//   });
+// });
