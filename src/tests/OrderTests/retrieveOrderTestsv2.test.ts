@@ -1,8 +1,8 @@
 import { expect } from '@jest/globals';
 import { server } from '../../index'
 import { PersonRepository, SessionRepository } from "../../repository/PersonRepository";
-import { closeServer } from '../testHelper'
-import {createOrder,retrieveOrder } from "../testHelper"
+import { closeServer, createOrderReq } from '../testHelper'
+import { retrieveOrder } from "../testHelper"
 import { registerUserRequest } from '../testHelper'
 
 
@@ -32,10 +32,11 @@ describe('registerUser', () => {
   // mockedAxios.post.mockResolvedValueOnce(mockRegisterResponse);
   // mockedAxios.post.mockResolvedValueOnce(mockCreateOrderResponse);
 
-      // const res = await registerUserRequest('uName', 'pWord', 'email@email.com');
-      // expect(res.status).toBe(200);
-      // expect(res.data).toStrictEqual(expect.any(String));
-      // const token = res.data;
+      const res = await registerUserRequest('uName', 'pWord', 'email@email.com');
+      expect(res.status).toBe(200);
+      expect(res.data).toStrictEqual(expect.any(String));
+      const token = res.data;
+      console.log(res.data);
 
       // // check that person was pushed into person repo and token into session
       // const repoP = new PersonRepository;
@@ -48,9 +49,9 @@ describe('registerUser', () => {
       // // expect(findSession).toStrictEqual(expect.any(String));
 
 
-
-      const order1 = await createOrder(
-        'safsdgeafvsrbae', 
+      
+      const order1 =  createOrderReq(
+        token, 
         'personUId test', 
         [mockOrderData], 
         'details'

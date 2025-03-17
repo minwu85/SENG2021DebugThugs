@@ -4,7 +4,7 @@ import { jest } from '@jest/globals';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 import { OrderRepository } from "../../repository/OrderRepository";
-import {createOrder,retrieveOrder } from "../testHelper"
+import { createOrderReq,retrieveOrder } from "../testHelper"
 import { server } from '../../index'
 import { PersonRepository, SessionRepository } from "../../repository/PersonRepository";
 import { closeServer } from '../testHelper'
@@ -45,7 +45,7 @@ describe('retrieveOrder', () => {
         console.log('Registration response:', res);
         const token = res.data;
         // const token = (await registerUserRequest('uName', 'pWord', 'email@email.com')).data;
-        const order1 = await createOrder(
+        const order1 = await createOrderReq(
             token, 
             'personUId test', 
             [mockOrderData], 

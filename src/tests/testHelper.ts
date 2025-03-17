@@ -51,7 +51,7 @@ export async function loginUserRequest(userInput: string, password: string) {
   }
 }
 
-export async function createOrder(
+export async function createOrderReq(
   token: string,
   personUid: string,
   itemList?: Item[],
