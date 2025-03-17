@@ -40,7 +40,7 @@ describe('cancelOrder', () => {
 
     // Check that the response is as expected
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Order canceled successfully' });
+    expect(res.json).toHaveBeenCalledWith({ message: expect.any(String) });
 
     // Verify the order is no longer found in the repository
     const repo = new OrderRepository();

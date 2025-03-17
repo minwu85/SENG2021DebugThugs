@@ -8,7 +8,7 @@ describe('clearOrder', () => {
   test('successful order clearing', async () => {
     const res = await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
     expect(res.status).toBe(200);
-    expect(res.data).toEqual(expect.any(String));
+    expect(res.data).toStrictEqual({ message: expect.any(String) });
   });
 
   afterAll(async () => {
