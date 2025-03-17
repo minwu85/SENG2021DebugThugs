@@ -12,6 +12,9 @@ describe('retrieveAllOrders', () => {
   let personUid: string;
 
   beforeAll(async () => {
+    // clear
+    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
+
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
     const sessionRepo = new SessionRepository();
@@ -24,7 +27,7 @@ describe('retrieveAllOrders', () => {
     // Create an order to test retrieval
     await createOrder(token, personUid, [
       { itemId: 'item123', itemQuantity: 2, itemSeller: 'sellerX' }
-    ], 'invoiceDetails');
+    ], '{"details": "Valid invoice details"}');
   });
   console.log('order created');
 
@@ -39,7 +42,7 @@ describe('retrieveAllOrders', () => {
     res.data.orders.forEach((order: Order) => {
       expect(order).toHaveProperty('orderUid', expect.any(String));
       expect(order).toHaveProperty('personUid', expect.any(String));
-      expect(order).toHaveProperty('invoiceDetails', expect.any(String)); // Adjust fields as per schema
+      expect(order).toHaveProperty('invoiceDetails', expect.any(Object)); // Adjust fields as per schema
     });
   });
 
