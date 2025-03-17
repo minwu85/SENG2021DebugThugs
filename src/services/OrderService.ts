@@ -87,7 +87,19 @@ export class OrderService {
   }
 
   public async getAllOrdersByPersonUid(personUid: string): Promise<Order[]> {
-    return this.orderRepo.findAllByPersonUid(personUid);
+    try {
+      if (!personUid) {
+        throw new Error('personUid is required');
+      }
+  
+      // Call repository method to get orders
+      const orders = await this.orderRepo.findAllByPersonUid(personUid);
+  
+      return orders || []; // Ensure it always returns an array
+    } catch (error) {
+      console.error(`Error retrieving orders for personUid ${personUid}:`, error);
+      throw new Error('Unable to retrieve orders');
+    }
   }
 
   public async cancelOrder(orderUid: string): Promise<boolean> {
