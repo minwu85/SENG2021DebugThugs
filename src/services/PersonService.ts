@@ -12,7 +12,13 @@ export class PersonService {
     this.sessionRepo = new SessionRepository();
   }
 
-  // register a user
+  /**
+   * registers a user
+   * @param {string} username
+   * @param {string} password
+   * @param {string} email
+   * @returns {string} token
+  */
   public async registerUser(username: string, password: string, email: string): Promise<string> {
     const personUid = uuidv4();
     const newPerson = new Person(personUid, username, password, email);
@@ -26,7 +32,12 @@ export class PersonService {
     return newToken;
   }
 
-  // log in a user
+  /**
+   * logs in a user
+   * @param {string} userInput (username or password)
+   * @param {string} password
+   * @returns {string} token
+  */
   public async loginUser(userInput: string, password: string): Promise <string> {
     // check if 'user' is username or email
     const validation = new Validation();
@@ -48,6 +59,28 @@ export class PersonService {
     // start a new session for this user
     const token = this.sessionRepo.startSession(user.personUid);
     return token;
+  }
+
+  /**
+   * logs in a user
+   * @param {string} token
+  */
+  public async logoutUser(token: string): Promise <any> {
+    // validate token
+    const validateToken = new Validation();
+    const personUid = this.sessionRepo.findPersonUidFromToken(token);
+    if (!personUid) {
+      throw new Error('Invalid token');
+    }
+
+    try {
+      validateToken.validateToken(token, personUid);
+    } catch (error) {
+      throw new Error('Invalid token');
+    }
+
+    this.sessionRepo.endSession(token);
+    return {};
   }
 
   public async getPersonByUsername(username: string): Promise<Person | null> {

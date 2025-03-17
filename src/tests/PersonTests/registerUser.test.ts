@@ -17,6 +17,7 @@ describe('registerUser', () => {
       // check that person was pushed into person repo and token into session
       const repoP = new PersonRepository;
       const findPerson = repoP.findByUsername('test');
+      expect(findPerson).not.toBeNull();
       expect(findPerson).toBeDefined();
 
       const repoS = new SessionRepository;

@@ -13,6 +13,7 @@ describe('loginUser', () => {
   test('successful login', async () => {
       const res = await loginUserRequest('email', 'password');
 
+      expect(res.status).toBe(200);
       expect(res.data).toStrictEqual(expect.any(String));
 
       // check session was pushed
@@ -27,7 +28,7 @@ describe('loginUser', () => {
       fail('Did not throw expected error');
     } catch (error) {
       expect(error.response.status).toBe(401);
-      expect(error.response.data).toStrictEqual(expect.any(String));
+      expect(error.response.data).toStrictEqual({ error: expect.any(String) });
     }
   });
 
@@ -37,7 +38,7 @@ describe('loginUser', () => {
       fail('Did not throw expected error');
     } catch (error) {
       expect(error.response.status).toBe(401);
-      expect(error.response.data).toStrictEqual(expect.any(String));
+      expect(error.response.data).toStrictEqual({ error: expect.any(String) });
     }
   });
 

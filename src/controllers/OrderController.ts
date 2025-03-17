@@ -22,6 +22,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
   }
 }
 
+
 export async function saveOrder(req: Request, res: Response) {
   try {
     const { personUid, status, invoiceDetails } = req.body;
@@ -48,6 +49,21 @@ export async function getOrderByInvoiceUid(req: Request, res: Response) {
   }
 }
 
+export async function fetchXml(req: Request, res: Response): Promise <any> {
+  const { orderUid } = req.params;
+
+  try {
+    const result = await orderService.fetchXml(orderUid);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+  } else {
+      return res.status(500).json('Unknown error');
+  }
+  }
+}
+// GET /api/order/person/:personUid
 export const getAllOrdersByPersonUid = async (req: Request, res: Response): Promise<void> => {
   try {
     const { personUid } = req.params;
