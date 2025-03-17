@@ -8,7 +8,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "prestart": "npm run build",
     "start": "node dist/index.js",
     "test": "jest"
   },
@@ -49,7 +48,6 @@
     "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0",
     "xml-js": "^1.6.11",
-    "yamljs": "^0.3.0",
-    "typescript": "^5.8.2"
+    "yamljs": "^0.3.0"
   }
 }
