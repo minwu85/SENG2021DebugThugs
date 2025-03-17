@@ -1,6 +1,6 @@
 import { PORT, server } from '../../index'
 import { OrderRepository } from "../../repository/OrderRepository";
-import { closeServer, createOrder, registerUserRequest } from "../testHelper";
+import { closeServer, createOrderReq, registerUserRequest } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
 
 const SERVER_URL = `http://localhost:${PORT}`;
@@ -19,7 +19,7 @@ describe('createOrder', () => {
   });
 
   test('successful order creation', async () => {
-      const res = await createOrder(
+      const res = await createOrderReq(
         token,
         personUid,
         [
