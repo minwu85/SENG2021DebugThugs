@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
 import orderRoutes from '../routes/OrderRoutes';
 import { OrderRepository } from '../repository/OrderRepository';
+import { Order } from '../domain/Order';
 const orderService = new OrderService();
 
 // POST /api/order
@@ -58,14 +59,13 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
 }
 
 // GET /api/order/person/:personUid
-
 export const getAllOrdersByPersonUid = async (req: Request, res: Response): Promise<void> => {
   try {
     const { personUid } = req.params;
     const repo = new OrderRepository();
 
     // Use the correct method: findAllByPersonUid
-    const orders = repo.findAllByPersonUid(personUid);
+    const orders: Order[] = repo.findAllByPersonUid(personUid);
     
     res.status(200).json({ orders });
   } catch (error) {
