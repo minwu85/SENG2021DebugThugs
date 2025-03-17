@@ -3,7 +3,7 @@ import { SessionRepository } from '../../repository/PersonRepository';
 import { closeServer, logoutUserReq, registerUserRequest } from '../testHelper'
 
 describe('loginUser', () => {
-  let token;
+  let token: string;
   beforeEach(async () => {
     // insert clear function
 
@@ -27,8 +27,13 @@ describe('loginUser', () => {
        await logoutUserReq('');
       fail('Did not throw expected error');
     } catch (error) {
-      expect(error.response.status).toBe(401);
-      expect(error.response.data).toStrictEqual({ error: expect.any(String) });
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
     }
 
     // check session still exists

@@ -2,35 +2,28 @@ import { Request, Response } from 'express';
 import { OrderService } from '../services/OrderService';
 import orderRoutes from '../routes/OrderRoutes';
 import { OrderRepository } from '../repository/OrderRepository';
-
 const orderService = new OrderService();
 
 // POST /api/order
-export async function createOrder(req: Request, res: Response): Promise<void> {
+// createOrder
+export async function createOrder(req: Request, res: Response): Promise <void> {
   const token = req.header('token') as string;
   const { personUid, itemList, invoiceDetails } = req.body;
 
   if (!token) {
     res.status(401).json({ error: 'Token is required' });
   }
-
+  
   try {
-    const orderId = await orderService.createOrder(token, personUid, itemList, invoiceDetails);
-    res.status(200).json({ orderId });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const result = await orderService.createOrder(token, personUid, itemList,
+      invoiceDetails);
+    res.status(200).json({ result });
+  } catch (error ) {
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+  } else {
+      res.status(400).json({ message: 'Unknown error' });
   }
-}
-
-
-export async function saveOrder(req: Request, res: Response) {
-  try {
-    const { personUid, status, invoiceDetails } = req.body;
-    const savedOrder = await orderService.saveOrder(personUid, status, invoiceDetails);
-    return res.status(201).json(savedOrder);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Unable to save order' });
   }
 }
 
@@ -63,20 +56,22 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
   }
   }
 }
+
 // GET /api/order/person/:personUid
+
 export const getAllOrdersByPersonUid = async (req: Request, res: Response): Promise<void> => {
   try {
     const { personUid } = req.params;
     const repo = new OrderRepository();
 
-    // Use await for async methods
-    const orders = await repo.findAllByPersonUid(personUid);
+    // Use the correct method: findAllByPersonUid
+    const orders = repo.findAllByPersonUid(personUid);
     
     res.status(200).json({ orders });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
 // DELETE /api/order/cancel
 export const cancelOrder = async (req: Request, res: Response): Promise<void> => {
@@ -108,3 +103,4 @@ export const clearOrder = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+

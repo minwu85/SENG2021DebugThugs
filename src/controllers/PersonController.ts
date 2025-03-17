@@ -11,7 +11,11 @@ export async function registerUser(req: Request, res: Response): Promise <any> {
     const result = await personService.registerUser(username, password, email);
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(401).json({ error: error.message });
+    if (error instanceof Error) {
+        return res.status(401).json({ error: error.message });
+    } else {
+        return res.status(401).json({ error: 'Unknown error' });
+    }
   }
 }
 
@@ -22,7 +26,11 @@ export async function loginUser(req: Request, res: Response): Promise <any> {
     const result = await personService.loginUser(userInput, password);
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(401).json({ error: error.message });
+    if (error instanceof Error) {
+        return res.status(401).json({ error: error.message });
+    } else {
+        return res.status(401).json({ error: 'Unknown error' });
+    }
   }
 }
 
@@ -37,7 +45,11 @@ export async function getPersonByUsername(req: Request, res: Response) {
     return res.json(person);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Unable to get person' });
+    if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+    } else {
+        return res.status(500).json({ error: 'Unknown error' });
+    }
   }
 }
 
@@ -52,7 +64,11 @@ export async function getPersonByEmail(req: Request, res: Response) {
     return res.json(person);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Unable to get person' });
+    if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+    } else {
+        return res.status(500).json({ error: 'Unknown error' });
+    }
   }
 }
 
@@ -67,6 +83,10 @@ export async function logoutUser(req: Request, res: Response): Promise <any> {
     const result = await personService.logoutUser(token);
     return res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+    } else {
+        return res.status(500).json({ error: 'Unknown error' });
+    }
   }
 }
