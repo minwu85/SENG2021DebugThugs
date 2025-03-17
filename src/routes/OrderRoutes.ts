@@ -5,8 +5,9 @@ import {
   getAllOrdersByPersonUid,
   createOrder,
   cancelOrder,
-  clearOrder,
+  clearOrder
 } from '../controllers/OrderController';
+import { OrderRepository } from '../repository/OrderRepository';
 
 const router = Router();
 
@@ -25,8 +26,9 @@ router.get('/person/:personUid', getAllOrdersByPersonUid);
 router.delete('/v1/order/cancel', cancelOrder);
 console.log('Cancel order route registered');
 
-// DELETE /api/order/clear
+// DELETE /v1/clear
 router.delete('/v1/clear', clearOrder);
 console.log('Clear order route registered');
+
 
 export default router;
