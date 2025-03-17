@@ -1,4 +1,4 @@
-import { OrderRepository } from '../repository/OrderRepository';
+import { OrderRepository, saveXml } from '../repository/OrderRepository';
 import { Order, Item } from '../domain/Order';
 import { v4 as uuidv4 } from 'uuid';
 import { Validation } from './ServicesHelper';
@@ -30,7 +30,7 @@ export class OrderService {
     const validateToken = new Validation();
 
     try {
-      validateToken.validateToken(token, personUid);
+      await validateToken.validateToken(token, personUid);
     } catch (error) {
       throw new Error('Invalid token');
     }
@@ -40,7 +40,7 @@ export class OrderService {
 
     // create new Order and save to repo
     const newOrder = new Order(orderUid, personUid, 'Pending', itemList, invoiceDetails);
-    this.orderRepo.save(newOrder);
+    await this.orderRepo.save(newOrder);
 
     return orderUid;
   }
@@ -51,7 +51,7 @@ export class OrderService {
    * @returns {string} xml
   */
   public async fetchXml(orderUid: string): Promise <string> {
-    const order = this.orderRepo.findByOrderUid(orderUid);
+    const order = await this.orderRepo.findByOrderUid(orderUid);
     
     if (!order) {
       throw new Error('Order does not exist');
@@ -77,21 +77,21 @@ export class OrderService {
     var xmlOptions = {compact: true, ignoreComment: true, spaces: 4};
     const orderXml = convert.json2xml(orderFormatted, xmlOptions);
 
-    order.xml = orderXml;
+    await saveXml(orderUid, orderXml);
 
     return orderXml;
   }
 
   public async getOrderByUid(orderUid: string): Promise<Order | null> {
-    return this.orderRepo.findByOrderUid(orderUid);
+    return await this.orderRepo.findByOrderUid(orderUid);
   }
 
   public async getAllOrdersByPersonUid(personUid: string): Promise<Order[]> {
-    return this.orderRepo.findAllByPersonUid(personUid);
+    return await this.orderRepo.findAllByPersonUid(personUid);
   }
 
   public async cancelOrder(orderUid: string): Promise<boolean> {
-    const order = this.orderRepo.findByOrderUid(orderUid);
+    const order = await this.orderRepo.findByOrderUid(orderUid);
 
     if (!order || order.status === 'Deleted') {
       return false;

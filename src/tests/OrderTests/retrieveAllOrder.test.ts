@@ -15,7 +15,7 @@ describe('retrieveAllOrders', () => {
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
     const sessionRepo = new SessionRepository();
-    const uid = sessionRepo.findPersonUidFromToken(token);
+    const uid = await sessionRepo.findPersonUidFromToken(token);
     if (uid === null) {
       throw new Error('Person UID not found');
     }

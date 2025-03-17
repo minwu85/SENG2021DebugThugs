@@ -44,7 +44,7 @@ describe('cancelOrder', () => {
 
     // Verify the order is no longer found in the repository
     const repo = new OrderRepository();
-    const find = repo.findByOrderUid(orderId);
+    const find = await repo.findByOrderUid(orderId);
     expect(find?.status).toBe('Deleted'); // The order should have been marked as 'Deleted'
   });
 

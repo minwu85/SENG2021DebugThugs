@@ -18,7 +18,7 @@ describe('loginUser', () => {
 
       // check session no longer exists
       const repo = new SessionRepository;
-      const find = repo.findPersonUidFromToken(token);
+      const find = await repo.findPersonUidFromToken(token);
       expect(find).toBeNull();
   });
 
@@ -38,7 +38,7 @@ describe('loginUser', () => {
 
     // check session still exists
     const repo = new SessionRepository;
-    const find = repo.findPersonUidFromToken(token);
+    const find = await repo.findPersonUidFromToken(token);
     expect(find).toStrictEqual(expect.any(String));
   });
 

@@ -24,10 +24,10 @@ export class PersonService {
     const newPerson = new Person(personUid, username, password, email);
 
     // push to repo
-    this.personRepo.save(newPerson);
+    await this.personRepo.save(newPerson);
 
     // generate new token
-    const newToken = this.sessionRepo.startSession(personUid);
+    const newToken = await this.sessionRepo.startSession(personUid);
 
     return newToken;
   }
@@ -44,7 +44,7 @@ export class PersonService {
     let user: Person;
 
     try {
-      user = validation.findUser(userInput);
+      user = await validation.findUser(userInput);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -55,7 +55,7 @@ export class PersonService {
 
     // check password is correct
     try {
-      validation.validatePassword(user, password);
+      await validation.validatePassword(user, password);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -65,7 +65,7 @@ export class PersonService {
     }
 
     // start a new session for this user
-    const token = this.sessionRepo.startSession(user.personUid);
+    const token = await this.sessionRepo.startSession(user.personUid);
     return token;
   }
 
@@ -76,13 +76,13 @@ export class PersonService {
   public async logoutUser(token: string): Promise <any> {
     // validate token
     const validateToken = new Validation();
-    const personUid = this.sessionRepo.findPersonUidFromToken(token);
+    const personUid = await this.sessionRepo.findPersonUidFromToken(token);
     if (!personUid) {
       throw new Error('Invalid token');
     }
 
     try {
-      validateToken.validateToken(token, personUid);
+      await validateToken.validateToken(token, personUid);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error('Invalid token');
@@ -91,7 +91,7 @@ export class PersonService {
       }
     }
 
-    this.sessionRepo.endSession(token);
+    await this.sessionRepo.endSession(token);
     return {};
   }
 

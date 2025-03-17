@@ -48,6 +48,7 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
 
   try {
     const result = await orderService.fetchXml(orderUid);
+
     return res.status(200).json(result);
   } catch (error) {
     if (error instanceof Error) {
@@ -65,7 +66,7 @@ export const getAllOrdersByPersonUid = async (req: Request, res: Response): Prom
     const repo = new OrderRepository();
 
     // Use the correct method: findAllByPersonUid
-    const orders: Order[] = repo.findAllByPersonUid(personUid);
+    const orders: Order[] = await repo.findAllByPersonUid(personUid);
     
     res.status(200).json({ orders });
   } catch (error) {
@@ -79,7 +80,7 @@ export const cancelOrder = async (req: Request, res: Response): Promise<void> =>
     const { orderUid } = req.body;
     const repo = new OrderRepository();
     
-    const order = repo.findByOrderUid(orderUid);
+    const order = await repo.findByOrderUid(orderUid);
     if (!order || order.status === 'Deleted') {
       res.status(400).json({ error: 'Order not found or already canceled' });
       return;
