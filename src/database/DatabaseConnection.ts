@@ -64,11 +64,11 @@ export async function initDB(): Promise<void> {
   }
 }
 
-// Call initDB and close the pool when done
-initDB()
-  .then(() => {
-    console.log('Closing database connection...');
-    return pool.end();
-  })
-  .then(() => console.log('Database connection closed.'))
-  .catch((err) => console.error('Error closing connection:', err));
+export async function closeDB(): Promise<void> {
+  try {
+    console.log('Closing database...');
+    await pool.end();
+  } catch (error) {
+    console.error('Error closing database:', error);
+  }
+}

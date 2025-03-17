@@ -6,7 +6,7 @@ import * as YAML from 'yamljs';
 import personRoutes from './routes/PersonRoutes';
 import orderRoutes from './routes/OrderRoutes';
 import cors from 'cors';
-import { initDB } from './database/DatabaseConnection';
+import { initDB, closeDB} from './database/DatabaseConnection';
 
 (async () => {
   try {
@@ -45,9 +45,10 @@ const server = app.listen(PORT, () => {
 });
 
 // For coverage, handle Ctrl+C gracefully
-process.on('SIGINT', () => {
-  server.close(() => {
+process.on('SIGINT', async () => {
+  await server.close( async () => {
     console.log('Shutting down server gracefully.');
+    await closeDB();
     process.exit();
   });
 });

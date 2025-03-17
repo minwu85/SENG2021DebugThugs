@@ -103,18 +103,19 @@ export async function getOrder(orderUid: string): Promise<Order | null> {
       r.itemId,
       r.itemQuantity,
       r.itemSeller,
-      r.itemType ? JSON.parse(r.itemType) : undefined,
+      typeof r.itemType === 'string' ? JSON.parse(r.itemType) : r.itemType, // ✅ Only parse if it's a string
       r.itemPrice,
       r.priceDiscount
     );
   });
+  
 
   const order = new Order(
     row.orderUid,
     row.personUid,
     row.status,
     items,
-    row.invoiceDetails ? JSON.parse(row.invoiceDetails) : undefined,
+    typeof row.invoiceDetails === 'string' ? JSON.parse(row.invoiceDetails) : row.invoiceDetails, // ✅ Ensure JSON parsing only when needed
     row.xml
   );
   return order;
