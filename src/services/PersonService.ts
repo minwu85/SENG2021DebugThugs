@@ -96,12 +96,12 @@ export class PersonService {
     await this.sessionRepo.endSession(token);
     return {};
   }
-  
+
   /**
    * Updates user password
    */
   public async updatePassword(personUid: string, oldPassword: string, newPassword: string): Promise<void> {
-    const user = await this.personRepo.findByUsername(personUid);
+    const user = await this.personRepo.findByPersonUid(personUid);
     if (!user) throw new Error('User not found');
 
     const passwordMatch = await bcrypt.compare(oldPassword, user.password);

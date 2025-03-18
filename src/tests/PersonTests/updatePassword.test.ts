@@ -1,5 +1,4 @@
 import { server } from '../../index';
-import { SessionRepository } from "../../repository/PersonRepository";
 import { closeServer } from '../testHelper';
 import { registerUserRequest, updatePasswordRequest } from '../testHelper';
 
@@ -9,13 +8,16 @@ describe('updatePassword', () => {
   let newPassword: string;
 
   beforeEach(async () => {
-    // Insert clear function if needed
-
     personUid = 'test-person-123';
     oldPassword = 'oldPass123';
     newPassword = 'newSecurePass456';
 
-    await registerUserRequest('user', oldPassword, 'email');
+    // Ensure user is registered before testing password updates
+    const registerRes = await registerUserRequest('testUser', oldPassword, 'test@example.com');
+    
+    if (registerRes.status !== 200) {
+      throw new Error('User registration failed before updatePassword test');
+    }
   });
 
   test('successful password update', async () => {
@@ -23,11 +25,6 @@ describe('updatePassword', () => {
 
     expect(res.status).toBe(200);
     expect(res.data).toStrictEqual({ message: expect.any(String) });
-
-    // Check session exists
-    const repo = new SessionRepository();
-    const findSession = repo.findPersonUidFromToken(res.data);
-    expect(findSession).toBeDefined();
   });
 
   test('incorrect old password', async () => {

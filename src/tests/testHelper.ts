@@ -101,7 +101,7 @@ export async function logoutUserReq(token: string) {
 }
 
 export async function updatePasswordRequest(personUid: string, oldPassword: string, newPassword: string) {
-  return await axios.post(`${SERVER_URL}/v1/user/update-password`, {
+  return await axios.post(`${SERVER_URL}/api/person/v1/user/updatePassword`, {
     personUid,
     oldPassword,
     newPassword
