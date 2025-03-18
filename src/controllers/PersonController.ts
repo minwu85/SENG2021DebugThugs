@@ -72,6 +72,26 @@ export async function getPersonByEmail(req: Request, res: Response) {
   }
 }
 
+/**
+ * Updates a user's password.
+ */
+export async function updatePassword(req: Request, res: Response): Promise<any> {
+  try {
+    const { personUid, oldPassword, newPassword } = req.body;
+
+    if (!personUid || !oldPassword || !newPassword) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    await personService.updatePassword(personUid, oldPassword, newPassword);
+    return res.status(200).json({ message: 'Password updated successfully' });
+
+  } catch (error: any) {
+    console.error('Error updating password:', error);
+    return res.status(400).json({ error: error.message });
+  }
+}
+
 export async function logoutUser(req: Request, res: Response): Promise <any> {
   const token = req.header('token') as string;
 

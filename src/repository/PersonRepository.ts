@@ -18,7 +18,17 @@ export class PersonRepository {
     const person = emailFind(email);
     return person;
   }
+  
+  public async updatePassword(personUid: string, hashedPassword: string): Promise<void> {
+    const sql = `
+      UPDATE persons
+      SET password = ?
+      WHERE personUid = ?
+    `;
+    await pool.query(sql, [hashedPassword, personUid]);
+  }
 }
+
 
 export class SessionRepository {
   public async findPersonUidFromToken(token: string): Promise<string | null> {

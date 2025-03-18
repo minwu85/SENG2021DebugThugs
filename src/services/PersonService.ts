@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { PersonRepository, SessionRepository } from '../repository/PersonRepository';
 import { Person } from '../domain/Person';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,7 +22,8 @@ export class PersonService {
   */
   public async registerUser(username: string, password: string, email: string): Promise<string> {
     const personUid = uuidv4();
-    const newPerson = new Person(personUid, username, password, email);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newPerson = new Person(personUid, username, hashedPassword, email);
 
     // push to repo
     await this.personRepo.save(newPerson);
@@ -93,6 +95,20 @@ export class PersonService {
 
     await this.sessionRepo.endSession(token);
     return {};
+  }
+  
+  /**
+   * Updates user password
+   */
+  public async updatePassword(personUid: string, oldPassword: string, newPassword: string): Promise<void> {
+    const user = await this.personRepo.findByUsername(personUid);
+    if (!user) throw new Error('User not found');
+
+    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!passwordMatch) throw new Error('Incorrect old password');
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await this.personRepo.updatePassword(personUid, hashedNewPassword);
   }
 
   public async getPersonByUsername(username: string): Promise<Person | null> {
