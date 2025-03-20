@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="swagger-ui/swagger-ui.css" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Documentation</title>
+    <link
+      href="/swagger-ui.css"
+      rel="stylesheet"
+    />
+    <script src="/swagger-ui-bundle.js"></script>
+    <script src="/swagger-ui-standalone-preset.js"></script>
+  </head>
+  <body>
     <div id="swagger-ui"></div>
-    <script src="swagger-ui/swagger-ui-bundle.js"></script>
-    <script src="swagger-ui/swagger-ui-standalone-preset.js"></script>
     <script>
-        SwaggerUIBundle({
-            url: '/swagger.yaml',  // Make sure this path points to where your swagger.yaml is
-            dom_id: '#swagger-ui', // This matches the div ID where Swagger UI will be injected
-            deepLinking: true,
-            presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
-            layout: 'BaseLayout'
-        });
+      SwaggerUIBundle({
+        url: '/swagger.yaml',
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        layout: 'BaseLayout',
+      });
     </script>
-</body>
+  </body>
 </html>
