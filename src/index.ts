@@ -1,4 +1,3 @@
-// code to try and use serverless
 import express, { Application } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
@@ -21,22 +20,24 @@ const app: Application = express();
   }
 })();
 
-// Load Swagger docs
+// Define a route for the root
+app.get('/', (req, res) => {
+  res.send('Welcome to the API! Please visit /swagger for the API documentation.');
+});
+
+// Load Swagger docs (ensure this is correct for your file structure)
 const swaggerDocument = YAML.load(path.join(__dirname, 'public', 'swagger.yaml'));
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));  // Serving Swagger UI at /swagger
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Swagger docs
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// Routes
+// Routes for the API
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
 
-// Graceful shutdown (not really needed for Vercel, but useful in local environments)
+// Graceful shutdown (useful for local environments)
 process.on('SIGINT', async () => {
   console.log('Shutting down server gracefully.');
   await closeDB();
@@ -45,8 +46,6 @@ process.on('SIGINT', async () => {
 
 // Export the Express app as a serverless function
 export default app;
-
-
 
 // import express, { Application } from 'express';
 // import * as swaggerUi from 'swagger-ui-express';
