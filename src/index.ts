@@ -20,16 +20,17 @@ const app: Application = express();
   }
 })();
 
-// Correct path to swagger.yaml in 'public' folder
+// Serve static files (Swagger UI assets and swagger.yaml)
+app.use('/swagger-ui', express.static(path.join(__dirname, 'public', 'swagger-ui')));
+app.use('/swagger.yaml', express.static(path.join(__dirname, 'public', 'swagger.yaml')));
+
+// Load Swagger document
 const swaggerDocument = YAML.load(path.resolve('public', 'swagger.yaml'));
 
-// Serve static files (Swagger UI assets, swagger.yaml, etc.)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Serve Swagger UI at the root URL ("/")
+// Setup Swagger UI at root path
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   swaggerOptions: {
-    url: '/swagger.yaml',  // Ensure this URL points to your Swagger YAML file correctly
+    url: '/swagger.yaml',  // Swagger YAML URL
   }
 }));
 
@@ -41,7 +42,7 @@ app.use(express.json());
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
 
-// Graceful shutdown (not really needed for Vercel, but useful in local environments)
+// Graceful shutdown
 process.on('SIGINT', async () => {
   console.log('Shutting down server gracefully.');
   await closeDB();
