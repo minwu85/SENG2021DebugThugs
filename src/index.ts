@@ -17,11 +17,12 @@ const app: Application = express();
   }
 })();
 
-// Serve static files from 'public' folder
+// Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve Swagger UI at the root URL ("/")
 app.get('/', (req, res) => {
+  // Ensure index.html is being properly served
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
