@@ -22,7 +22,7 @@ const app: Application = express();
 })();
 
 // Load Swagger docs
-const swaggerDocument = YAML.load(path.join(__dirname, '/swagger', 'swagger.yaml'));
+const swaggerDocument = YAML.load(path.join(__dirname, 'public', 'swagger.yaml'));
 
 // Middleware
 app.use(cors());
