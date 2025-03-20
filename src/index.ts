@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
 import * as YAML from 'yamljs';
+import * as fs from 'fs';
 import cors from 'cors';
 
 import personRoutes from './routes/PersonRoutes';
@@ -24,9 +25,16 @@ const app: Application = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Load Swagger YAML
-const swaggerDocument = YAML.load(path.resolve(__dirname, 'public', 'swagger.yaml'));
+const swaggerPath = path.resolve(__dirname, 'public', 'swagger.yaml');
+let swaggerDocument;
+if (fs.existsSync(swaggerPath)) {
+  swaggerDocument = YAML.parse(fs.readFileSync(swaggerPath, 'utf8'));
+} else {
+  console.error('Swagger file not found!');
+  swaggerDocument = {};
+}
 
-// Serve Swagger UI at /api-docs (NO NEED for a separate init file)
+// Serve Swagger UI at /api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middleware
@@ -44,7 +52,7 @@ process.on('SIGINT', async () => {
   process.exit();
 });
 
-// Handle 404 errors (optional)
+// Handle 404 errors
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
 });
