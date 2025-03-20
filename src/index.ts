@@ -20,13 +20,13 @@ const app: Application = express();
   }
 })();
 
-// Serve static files (Swagger UI assets, Swagger YAML)
+// Serve static files (Swagger UI assets and swagger.yaml)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Load Swagger YAML from 'public' folder
 const swaggerDocument = YAML.load(path.resolve(__dirname, 'public', 'swagger.yaml'));
 
-// Serve Swagger UI at /api-docs
+// Serve Swagger UI at the root URL ("/api-docs")
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   swaggerOptions: {
     url: '/swagger.yaml',  // Ensure this URL points to your Swagger YAML file correctly
