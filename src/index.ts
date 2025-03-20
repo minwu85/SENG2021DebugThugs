@@ -21,7 +21,7 @@ const app: Application = express();
 })();
 
 // Load Swagger YAML file
-const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
+const swaggerDocument = YAML.load(path.join(__dirname, '..', 'public', 'swagger.yaml'));
 
 // Serve Swagger UI at the root route (/)
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
