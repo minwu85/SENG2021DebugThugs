@@ -1,12 +1,9 @@
 import express, { Application } from 'express';
-import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
-import * as YAML from 'yamljs';
-import cors from 'cors';
-
+import { initDB, closeDB } from './database/DatabaseConnection';
 import personRoutes from './routes/PersonRoutes';
 import orderRoutes from './routes/OrderRoutes';
-import { initDB, closeDB } from './database/DatabaseConnection';
+import cors from 'cors';
 
 const app: Application = express();
 
@@ -20,21 +17,8 @@ const app: Application = express();
   }
 })();
 
-// Serve static files for Swagger UI
-app.use('/swagger-ui', express.static(path.join(__dirname, 'public', 'swagger-ui')));
-
-// Serve Swagger YAML file
-app.use('/swagger.yaml', express.static(path.join(__dirname, 'public', 'swagger.yaml')));
-
-// Load Swagger document
-const swaggerDocument = YAML.load(path.resolve('public', 'swagger.yaml'));
-
-// Setup Swagger UI with custom options
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
-  swaggerOptions: {
-    url: '/swagger.yaml',  // This URL should point to your swagger.yaml
-  }
-}));
+// Serve Swagger UI from the 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
 app.use(cors());
@@ -44,7 +28,7 @@ app.use(express.json());
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
 
-// Graceful shutdown
+// Graceful shutdown (not really needed for Vercel, but useful in local environments)
 process.on('SIGINT', async () => {
   console.log('Shutting down server gracefully.');
   await closeDB();
