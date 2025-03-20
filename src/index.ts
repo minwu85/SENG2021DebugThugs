@@ -10,7 +10,7 @@ import { initDB, closeDB } from './database/DatabaseConnection';
 
 const app: Application = express();
 
-// Initialize database connection once
+// Initialize database connection
 (async () => {
   try {
     await initDB();
@@ -21,18 +21,13 @@ const app: Application = express();
 })();
 
 // Serve static files (Swagger UI assets and swagger.yaml)
-app.use('/swagger-ui', express.static(path.join(__dirname, 'public', 'swagger-ui')));
-app.use('/swagger.yaml', express.static(path.join(__dirname, 'public', 'swagger.yaml')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Load Swagger document
-const swaggerDocument = YAML.load(path.resolve('public', 'swagger.yaml'));
+// Load Swagger YAML
+const swaggerDocument = YAML.load(path.resolve(__dirname, 'public', 'swagger.yaml'));
 
-// Setup Swagger UI at root path
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
-  swaggerOptions: {
-    url: '/swagger.yaml',  // Swagger YAML URL
-  }
-}));
+// Serve Swagger UI at /api-docs (NO NEED for a separate init file)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middleware
 app.use(cors());
@@ -49,5 +44,10 @@ process.on('SIGINT', async () => {
   process.exit();
 });
 
-// Export the Express app as a serverless function
+// Handle 404 errors (optional)
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+// Export the Express app
 export default app;
