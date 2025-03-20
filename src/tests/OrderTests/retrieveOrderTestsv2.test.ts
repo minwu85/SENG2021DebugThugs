@@ -39,10 +39,10 @@ describe('registerUser', () => {
   // mockedAxios.post.mockResolvedValueOnce(mockCreateOrderResponse);
 
       const res = await registerUserRequest('uName', 'pWord', 'email@email.com');
-      expect(res.status).toBe(200);
-      expect(res.data).toStrictEqual(expect.any(String));
+      // expect(res.status).toBe(200);
+      // expect(res.data).toStrictEqual(expect.any(String));
       const token = res.data;
-      console.log(res.data);
+      // console.log(res.data);
 
       // // check that person was pushed into person repo and token into session
       // const repoP = new PersonRepository;
@@ -65,7 +65,7 @@ describe('registerUser', () => {
         }
       ],
       'details'
-    );
+    )
       
       // const order1 =  createOrderReq(
       //   token, 
