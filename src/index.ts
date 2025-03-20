@@ -20,17 +20,19 @@ const app: Application = express();
   }
 })();
 
-// Serve static files (Swagger UI assets and swagger.yaml)
+// Serve static files for Swagger UI
 app.use('/swagger-ui', express.static(path.join(__dirname, 'public', 'swagger-ui')));
+
+// Serve Swagger YAML file
 app.use('/swagger.yaml', express.static(path.join(__dirname, 'public', 'swagger.yaml')));
 
 // Load Swagger document
 const swaggerDocument = YAML.load(path.resolve('public', 'swagger.yaml'));
 
-// Setup Swagger UI at root path
+// Setup Swagger UI with custom options
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   swaggerOptions: {
-    url: '/swagger.yaml',  // Swagger YAML URL
+    url: '/swagger.yaml',  // This URL should point to your swagger.yaml
   }
 }));
 
