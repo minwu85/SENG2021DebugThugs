@@ -22,7 +22,8 @@ const app: Application = express();
 })();
 
 // Serve static files (Swagger UI assets and swagger.yaml)
-app.use(express.static(path.join(process.cwd(), 'public')));
+//app.use(express.static(path.join(process.cwd(), 'public')));
+
 
 if (fs.existsSync(path.join(process.cwd(), 'public', 'swagger.yaml'))) {
   console.log('swagger.yaml exists at the resolved path.');
@@ -31,9 +32,14 @@ if (fs.existsSync(path.join(process.cwd(), 'public', 'swagger.yaml'))) {
 }
 // Load Swagger YAML
 const swaggerDocument = YAML.load(path.join(process.cwd(), 'public', 'swagger.yaml'));
-
+// CDN CSS
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 // Serve Swagger UI at /api-docs
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customCss:
+    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customCssUrl: CSS_URL,
+}));
 
 // Middleware
 app.use(cors());
