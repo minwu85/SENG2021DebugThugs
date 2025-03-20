@@ -20,24 +20,21 @@ const app: Application = express();
   }
 })();
 
-// Define a route for the root
-app.get('/', (req, res) => {
-  res.send('Welcome to the API! Please visit /swagger for the API documentation.');
-});
+// Load Swagger YAML file
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
-// Load Swagger docs (ensure this is correct for your file structure)
-const swaggerDocument = YAML.load(path.join(__dirname, 'public', 'swagger.yaml'));
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));  // Serving Swagger UI at /swagger
+// Serve Swagger UI at the root route (/)
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes for the API
+// API Routes
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
 
-// Graceful shutdown (useful for local environments)
+// Graceful shutdown (not necessary for Vercel, but useful in local environments)
 process.on('SIGINT', async () => {
   console.log('Shutting down server gracefully.');
   await closeDB();
