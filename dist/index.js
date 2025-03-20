@@ -46,49 +46,85 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PORT = exports.server = void 0;
-const express_1 = __importDefault(require("express"));
-const swaggerUi = __importStar(require("swagger-ui-express"));
-const path = __importStar(require("path"));
-const YAML = __importStar(require("yamljs"));
-const PersonRoutes_1 = __importDefault(require("./routes/PersonRoutes"));
-const OrderRoutes_1 = __importDefault(require("./routes/OrderRoutes"));
-const cors_1 = __importDefault(require("cors"));
-const DatabaseConnection_1 = require("./database/DatabaseConnection");
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield (0, DatabaseConnection_1.initDB)();
-        console.log('Database initialized!');
-    }
-    catch (err) {
-        console.error('Error initializing DB:', err);
-    }
-}))();
+// const express_1 = __importDefault(require("express"));
+// const swaggerUi = __importStar(require("swagger-ui-express"));
+// const path = __importStar(require("path"));
+// const YAML = __importStar(require("yamljs"));
+// const PersonRoutes_1 = __importDefault(require("./routes/PersonRoutes"));
+// const OrderRoutes_1 = __importDefault(require("./routes/OrderRoutes"));
+// const cors_1 = __importDefault(require("cors"));
+// const DatabaseConnection_1 = require("./database/DatabaseConnection");
+// (() => __awaiter(void 0, void 0, void 0, function* () {
+//     try {
+//         yield (0, DatabaseConnection_1.initDB)();
+//         console.log('Database initialized!');
+//     }
+//     catch (err) {
+//         console.error('Error initializing DB:', err);
+//     }
+// }))();
+// // Load the swagger YAML file
+// const swaggerDocument = YAML.load(path.join(__dirname, 'swagger', 'swagger.yaml'));
+// // Optional: If you want to initialize a DB connection, import and call it:
+// // import { createDbConnection } from './database/DatabaseConnection';
+// // createDbConnection(); // Example usage
+// const app = (0, express_1.default)();
+// // Middleware
+// app.use((0, cors_1.default)());
+// app.use(express_1.default.json());
+// // Swagger docs
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// // Routes
+// app.use('/api/person', PersonRoutes_1.default);
+// app.use('/api/order', OrderRoutes_1.default);
+// //app.use('/api', adminRoutes);
+// // Start the server
+// const PORT = process.env.PORT || 3000;
+// exports.PORT = PORT;
+// const server = app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+// exports.server = server;
+// // For coverage, handle Ctrl+C gracefully
+// process.on('SIGINT', () => {
+//     server.close(() => {
+//         console.log('Shutting down server gracefully.');
+//         process.exit();
+//     });
+// });
+const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const path = require('path');
+const YAML = require('yamljs');
+const cors = require('cors');
+const PersonRoutes = require('./routes/PersonRoutes');
+const OrderRoutes = require('./routes/OrderRoutes');
+const { initDB } = require('./database/DatabaseConnection');
+
+// Initialize DB asynchronously
+initDB().then(() => {
+    console.log('Database initialized!');
+}).catch((err) => {
+    console.error('Error initializing DB:', err);
+});
+
 // Load the swagger YAML file
 const swaggerDocument = YAML.load(path.join(__dirname, 'swagger', 'swagger.yaml'));
-// Optional: If you want to initialize a DB connection, import and call it:
-// import { createDbConnection } from './database/DatabaseConnection';
-// createDbConnection(); // Example usage
-const app = (0, express_1.default)();
+
+const app = express();
+
 // Middleware
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
+app.use(cors());
+app.use(express.json());
+
 // Swagger docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Routes
-app.use('/api/person', PersonRoutes_1.default);
-app.use('/api/order', OrderRoutes_1.default);
-//app.use('/api', adminRoutes);
-// Start the server
-const PORT = process.env.PORT || 3000;
-exports.PORT = PORT;
-const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-exports.server = server;
-// For coverage, handle Ctrl+C gracefully
-process.on('SIGINT', () => {
-    server.close(() => {
-        console.log('Shutting down server gracefully.');
-        process.exit();
-    });
-});
+app.use('/api/person', PersonRoutes);
+app.use('/api/order', OrderRoutes);
+
+// Exporting the app as a serverless function handler
+module.exports = (req, res) => {
+    app(req, res);
+};
