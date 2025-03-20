@@ -1,4 +1,4 @@
-swagger: "2.0"
+swagger: 2.0
 info:
   title: Order and Admin API
   version: "1.0.0"
@@ -105,7 +105,7 @@ paths:
         401:
           description: Unauthorized
 
-  /api/order/v1/order/fetchxml:orderUid:
+  /api/order/v1/order/fetchxml/{orderUid}:
     get:
       summary: Retrieves XML representation of an order
       parameters:

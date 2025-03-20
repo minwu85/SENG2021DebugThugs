@@ -21,7 +21,7 @@ const app: Application = express();
 })();
 
 // Correct path to swagger.yaml in 'public' folder
-const swaggerDocument = YAML.load(path.join(__dirname, '..', 'public', 'swagger.yaml'));
+const swaggerDocument = YAML.load(path.resolve('public', 'swagger.yaml'));
 
 // Serve Swagger UI at the root URL ("/")
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
