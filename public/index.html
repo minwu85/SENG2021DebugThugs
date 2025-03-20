@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Documentation</title>
+    <title>Swagger UI</title>
     <link rel="stylesheet" type="text/css" href="swagger-ui/swagger-ui.css" />
-    <script src="swagger-ui/swagger-ui-bundle.js"></script>
-    <script src="swagger-ui/swagger-ui-standalone-preset.js"></script>
 </head>
 <body>
     <div id="swagger-ui"></div>
+    <script src="swagger-ui/swagger-ui-bundle.js"></script>
+    <script src="swagger-ui/swagger-ui-standalone-preset.js"></script>
     <script>
-        const ui = SwaggerUIBundle({
-            url: "/swagger.yaml",  // Path to the Swagger YAML file
-            dom_id: '#swagger-ui',
+        SwaggerUIBundle({
+            url: '/swagger.yaml',  // Make sure this path points to where your swagger.yaml is
+            dom_id: '#swagger-ui', // This matches the div ID where Swagger UI will be injected
             deepLinking: true,
-            presets: [
-                SwaggerUIBundle.presets.apis,
-                SwaggerUIStandalonePreset
-            ],
-            layout: "BaseLayout"
+            presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+            layout: 'BaseLayout'
         });
     </script>
 </body>
