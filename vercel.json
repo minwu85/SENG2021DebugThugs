@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "src/index.ts",
@@ -8,8 +7,12 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/src/index.ts"
+      "src": "/api-docs",
+      "dest": "/"
+    },
+    {
+      "src": "/swagger.yaml",
+      "dest": "/swagger.yaml"
     }
   ]
 }

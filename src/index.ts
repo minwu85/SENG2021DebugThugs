@@ -1,9 +1,12 @@
 import express, { Application } from 'express';
+import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
-import { initDB, closeDB } from './database/DatabaseConnection';
+import * as YAML from 'yamljs';
+import cors from 'cors';
+
 import personRoutes from './routes/PersonRoutes';
 import orderRoutes from './routes/OrderRoutes';
-import cors from 'cors';
+import { initDB, closeDB } from './database/DatabaseConnection';
 
 const app: Application = express();
 
@@ -17,14 +20,16 @@ const app: Application = express();
   }
 })();
 
-// Serve static files from the 'public' folder
+// Correct path to swagger.yaml in 'public' folder
+const swaggerDocument = YAML.load(path.resolve('public', 'swagger.yaml'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve Swagger UI at the root URL ("/")
-app.get('/', (req, res) => {
-  // Ensure index.html is being properly served
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  swaggerOptions: {
+    url: '/swagger.yaml',  // Ensure this URL points to your Swagger YAML file correctly
+  }
+}));
 
 // Middleware
 app.use(cors());
