@@ -17,8 +17,13 @@ const app: Application = express();
   }
 })();
 
-// Serve Swagger UI from the 'public' folder
+// Serve static files from 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve Swagger UI at the root URL ("/")
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Middleware
 app.use(cors());
