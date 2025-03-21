@@ -115,5 +115,6 @@
     "src",
     "src/**/*.ts",
     "src/**/*.yaml"
-  ]
+  ],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/testHelper.ts"]
 }

@@ -2,12 +2,16 @@ import express, { Application } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
 import * as YAML from 'yamljs';
+import * as fs from 'fs';
+import cors from 'cors';
 
 import personRoutes from './routes/PersonRoutes';
 import orderRoutes from './routes/OrderRoutes';
-import cors from 'cors';
-import { initDB, closeDB} from './database/DatabaseConnection';
+import { initDB, closeDB } from './database/DatabaseConnection';
 
+const app: Application = express();
+
+// Initialize database connection
 (async () => {
   try {
     await initDB();
@@ -17,41 +21,45 @@ import { initDB, closeDB} from './database/DatabaseConnection';
   }
 })();
 
-// Load the swagger YAML file
-const swaggerDocument = YAML.load(path.join(__dirname, 'swagger', 'swagger.yaml'));
+// Serve static files (Swagger UI assets and swagger.yaml)
+//app.use(express.static(path.join(process.cwd(), 'public')));
 
-// Optional: If you want to initialize a DB connection, import and call it:
-// import { createDbConnection } from './database/DatabaseConnection';
-// createDbConnection(); // Example usage
 
-const app: Application = express();
+if (fs.existsSync(path.join(process.cwd(), 'public', 'swagger.yaml'))) {
+  console.log('swagger.yaml exists at the resolved path.');
+} else {
+  console.error('swagger.yaml does NOT exist at the resolved path.');
+}
+// Load Swagger YAML
+const swaggerDocument = YAML.load(path.join(process.cwd(), 'public', 'swagger.yaml'));
+// CDN CSS
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+// Serve Swagger UI at /api-docs
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customCss:
+    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customCssUrl: CSS_URL,
+}));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Swagger docs
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// Routes
+// API routes
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
-//app.use('/api', adminRoutes);
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// For coverage, handle Ctrl+C gracefully
+// Graceful shutdown
 process.on('SIGINT', async () => {
-  await server.close( async () => {
-    console.log('Shutting down server gracefully.');
-    await closeDB();
-    process.exit();
-  });
+  console.log('Shutting down server gracefully.');
+  await closeDB();
+  process.exit();
 });
 
-export { server }
-export { PORT };
+// Handle 404 errors
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+// Export the Express app
+export default app;
