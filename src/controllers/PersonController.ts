@@ -5,8 +5,9 @@ const personService = new PersonService();
 
 // POST /api/person
 export async function registerUser(req: Request, res: Response): Promise <any> {
+  console.log('in controller');
+
   const { username, password, email } = req.body;
-  console.log(username, password, email);
   
   try {
     const result = await personService.registerUser(username, password, email);

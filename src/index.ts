@@ -11,6 +11,10 @@ import { initDB, closeDB } from './database/DatabaseConnection';
 
 const app: Application = express();
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
 // Initialize database connection
 (async () => {
   try {
@@ -40,10 +44,6 @@ app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
     '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
   customCssUrl: CSS_URL,
 }));
-
-// Middleware
-app.use(cors());
-app.use(express.json());
 
 // API routes
 app.use('/api/person', personRoutes);

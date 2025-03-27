@@ -45,6 +45,7 @@ export async function registerUserRequest(
   email: string
 ) {
   try {
+    console.log('in request');
     const res = await axios.post(
       `${SERVER_URL}/api/person/v1/registerUser`,
       { username, password, email },

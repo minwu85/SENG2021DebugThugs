@@ -5,25 +5,25 @@ import { registerUserRequest } from '../testHelper';
 
 describe('registerUser', () => {
   beforeAll(async () => {
-    await startTestServer(); // Start the test server first
+    await startTestServer();
   });
 
   beforeEach(async () => {
     const SERVER_URL = getServerUrl();
-    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
+    // await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
   });
 
   test('successful registration', async () => {
     const res = await registerUserRequest('test', 'test', 'test');
 
     expect(res.status).toBe(200);
-    console.log(res.data);
-    console.log(res.data.result);
+    // console.log(res.data);
+    // console.log(res.data.result);
     expect(res.data).toStrictEqual(expect.any(String));
 
     // Check that person was pushed into person repo and token into session
     const repoP = new PersonRepository();
-    const findPerson = await repoP.findByUsername('test'); // Ensure async handling
+    const findPerson = await repoP.findByUsername('test');
     expect(findPerson).not.toBeNull();
     expect(findPerson).toBeDefined();
 
