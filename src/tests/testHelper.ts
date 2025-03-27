@@ -1,47 +1,88 @@
 import axios from 'axios';
-import { PORT } from '../index'
-import { Item } from "../domain/Order";
+import { startServer, stopServer } from '../startServer';
+import { Item } from '../domain/Order';
+import { AddressInfo } from 'net';
 
-const SERVER_URL = `http://localhost:${PORT}`;
+let SERVER_URL: string;
+let serverInstance: Awaited<ReturnType<typeof startServer>> | null = null;
 
-// close server
-export async function closeServer(server: { close: (callback: () => void) => void }) {
-  console.log('Closing server after tests...');
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  await new Promise<void>((resolve) => server.close(() => resolve()));
+export async function startTestServer() {
+  if (serverInstance) {
+    return serverInstance; // Prevent multiple server instances
+  }
+
+  const server = await startServer();
+  const address = server.address();
+
+  if (!address || typeof address === 'string') {
+    throw new Error('Failed to retrieve server address');
+  }
+
+  SERVER_URL = `http://localhost:${(address as AddressInfo).port}`;
+  serverInstance = server;
+  return server; // Ensure the calling function gets the server instance
 }
 
-// register a user
+export async function closeServer() {
+  if (serverInstance) {
+    await stopServer();
+    serverInstance = null;
+  }
+}
+
+export function getServerUrl() {
+  if (!SERVER_URL) {
+    throw new Error('SERVER_URL is not set. Did you call startTestServer()?');
+  }
+  return SERVER_URL;
+}
+
+
+// Register a user
 export async function registerUserRequest(
   username: string,
   password: string,
   email: string
-  ) {
-    try {
-      const res = await axios.post(
-        `${SERVER_URL}/api/person/v1/registerUser`,
-        {
-          username, password, email
-        },
-        {
-          timeout: 5 * 1000
-        }
-      );
-      return res;
-    } catch (error) {
-      throw error;
-    }
+) {
+  try {
+    const res = await axios.post(
+      `${SERVER_URL}/api/person/v1/registerUser`,
+      { username, password, email },
+      { timeout: 5 * 1000 }
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
 }
 
-// logs in a user
+// Logs in a user
 export async function loginUserRequest(userInput: string, password: string) {
   try {
     const res = await axios.post(
       `${SERVER_URL}/api/person/v1/loginUser`,
+      { userInput, password },
+      { timeout: 5 * 1000 }
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Create an order
+export async function createOrder(
+  token: string,
+  personUid: string,
+  itemList?: Item[],
+  invoiceDetails?: any
+) {
+  try {
+    const res = await axios.post(
+      `${SERVER_URL}/api/order/v1/order/create`,
+      { personUid, itemList, invoiceDetails },
       {
-        userInput, password
-      },
-      {
+        headers: { token },
         timeout: 5 * 1000
       }
     );
@@ -51,33 +92,11 @@ export async function loginUserRequest(userInput: string, password: string) {
   }
 }
 
-export async function createOrder(
-  token: string,
-  personUid: string,
-  itemList?: Item[],
-  invoiceDetails?: any
-  ) {
-    try {
-      const res = await axios.post(
-        `${SERVER_URL}/api/order/v1/order/create`,
-        {
-          personUid, itemList, invoiceDetails
-        },
-        {
-          headers: { token },
-          timeout: 5 * 1000
-        }
-      );
-      return res;
-    } catch (error) {
-      throw error;
-    }
-}
-
+// Fetch order XML
 export async function fetchXmlRequest(orderUid: string) {
   try {
     const res = await axios.get(
-      `${SERVER_URL}/api/order/v1/order/fetchxml${orderUid}`,
+      `${SERVER_URL}/api/order/v1/order/fetchxml${orderUid}`
     );
     return res;
   } catch (error) {
@@ -85,6 +104,7 @@ export async function fetchXmlRequest(orderUid: string) {
   }
 }
 
+// Logout user
 export async function logoutUserReq(token: string) {
   try {
     const res = await axios.delete(

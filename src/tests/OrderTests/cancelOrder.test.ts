@@ -1,10 +1,16 @@
 import axios from 'axios';
-import { PORT, server } from '../../index';
-import { closeServer } from '../testHelper';
+import { startServer, stopServer } from '../../startServer';
+import { Server } from 'http';
 
-const SERVER_URL = `http://localhost:${PORT}`;
+const TEST_PORT = 5001;
+const SERVER_URL = `http://localhost:${TEST_PORT}`;
+let server: Server;
 
 describe('cancel Order', () => {
+  beforeAll(async () => {
+    server = await startServer();
+  });
+
   test('successful order cancel', async () => {
     const res = await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
     expect(res.status).toBe(200);
@@ -12,6 +18,6 @@ describe('cancel Order', () => {
   });
 
   afterAll(async () => {
-    await closeServer(server);
+    await stopServer();
   });
 });
