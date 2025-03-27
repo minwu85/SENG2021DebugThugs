@@ -8,7 +8,7 @@ let serverInstance: Awaited<ReturnType<typeof startServer>> | null = null;
 
 export async function startTestServer() {
   if (serverInstance) {
-    return serverInstance; // Prevent multiple server instances
+    return serverInstance;
   }
 
   const server = await startServer();
@@ -20,7 +20,7 @@ export async function startTestServer() {
 
   SERVER_URL = `http://localhost:${(address as AddressInfo).port}`;
   serverInstance = server;
-  return server; // Ensure the calling function gets the server instance
+  return server;
 }
 
 export async function closeServer() {
@@ -37,7 +37,6 @@ export function getServerUrl() {
   return SERVER_URL;
 }
 
-
 // Register a user
 export async function registerUserRequest(
   username: string,
@@ -51,6 +50,7 @@ export async function registerUserRequest(
       { username, password, email },
       { timeout: 5 * 1000 }
     );
+    console.log('finished getting request');
     return res;
   } catch (error) {
     throw error;

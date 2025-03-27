@@ -10,15 +10,14 @@ describe('registerUser', () => {
 
   beforeEach(async () => {
     const SERVER_URL = getServerUrl();
-    // await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
+    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
   });
 
   test('successful registration', async () => {
     const res = await registerUserRequest('test', 'test', 'test');
 
     expect(res.status).toBe(200);
-    // console.log(res.data);
-    // console.log(res.data.result);
+
     expect(res.data).toStrictEqual(expect.any(String));
 
     // Check that person was pushed into person repo and token into session

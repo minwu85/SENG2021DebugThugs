@@ -45,6 +45,12 @@ app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customCssUrl: CSS_URL,
 }));
 
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  console.log(`Body:`, req.body);
+  next();
+});
+
 // API routes
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
