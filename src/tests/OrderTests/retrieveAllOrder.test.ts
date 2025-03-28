@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { OrderRepository } from '../../repository/OrderRepository';
 import { closeServer, createOrder, getServerUrl, registerUserRequest, startTestServer } from '../testHelper';
 import { Order } from '../../domain/Order';
 import { SessionRepository } from '../../repository/PersonRepository';
