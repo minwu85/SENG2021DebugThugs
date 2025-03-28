@@ -22,9 +22,25 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
   } catch (error ) {
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
-  } else {
+    } else {
       res.status(400).json({ message: 'Unknown error' });
+    }
   }
+}
+
+// completeOrder
+export async function completeOrder(req: Request, res: Response): Promise <void> {
+  const { orderUid } = req.body;
+
+  try {
+    await orderService.completeOrder(orderUid);
+    res.status(200).json({ message: 'Order completed successfully '});
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(400).json({ message: 'Unknown error' });
+    }
   }
 }
 
