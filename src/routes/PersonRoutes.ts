@@ -2,8 +2,6 @@ import { Router } from 'express';
 import {
   registerUser,
   loginUser,
-  getPersonByUsername,
-  getPersonByEmail,
   logoutUser
 } from '../controllers/PersonController';
 

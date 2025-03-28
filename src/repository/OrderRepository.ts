@@ -1,6 +1,6 @@
 import { Order, Item } from '../domain/Order';
 import { pool } from '../database/DatabaseConnection';
-import { getAllOrders, getOrder, saveOrder, saveXmlToOrder } from '../database/databaseHelpers';
+import { getAllOrders, getOrder, saveOrder, saveXmlToOrder, updateOrderStatus } from '../database/databaseHelpers';
 
 export class OrderRepository {
   private static orders: Order[] = [];
@@ -18,6 +18,10 @@ export class OrderRepository {
   public async findAllByPersonUid(personUid: string): Promise<Order[]> {
     const orders = getAllOrders(personUid);
     return orders;
+  }
+
+  public async updateOrderStatus(newStatus: string, orderUid: string): Promise <void> {
+    await updateOrderStatus(orderUid, newStatus);
   }
 
   public async clear(): Promise<void> {

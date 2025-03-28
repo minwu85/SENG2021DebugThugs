@@ -1,11 +1,23 @@
-import { server } from '../../index'
+import axios from 'axios';
 import { SessionRepository } from "../../repository/PersonRepository";
-import { closeServer } from '../testHelper'
+import { closeServer, getServerUrl, startTestServer } from '../testHelper'
 import { registerUserRequest, loginUserRequest } from '../testHelper'
 
 describe('loginUser', () => {
+  let token: string;
+
+  beforeAll(async () => {
+    await startTestServer();
+  });
+
   beforeEach(async () => {
-    // insert clear function
+    const SERVER_URL = getServerUrl();
+
+    // Clear previous orders
+    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
+
+    const register = await registerUserRequest('user', 'password', 'email');
+    token = register.data;
 
     await registerUserRequest('user', 'password', 'email');
   });
@@ -18,7 +30,7 @@ describe('loginUser', () => {
 
       // check session was pushed
       const repo = new SessionRepository();
-      const findSession = repo.findPersonUidFromToken(res.data);
+      const findSession = await repo.findPersonUidFromToken(res.data);
       expect(findSession).toBeDefined();
   });
 
@@ -53,6 +65,6 @@ describe('loginUser', () => {
   });
 
   afterAll(async () => {
-    await closeServer(server);
+    await closeServer();
   });
 });

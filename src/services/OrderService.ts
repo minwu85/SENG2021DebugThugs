@@ -90,15 +90,13 @@ export class OrderService {
     return await this.orderRepo.findAllByPersonUid(personUid);
   }
 
-  public async cancelOrder(orderUid: string): Promise<boolean> {
+  public async cancelOrder(orderUid: string): Promise<void> {
     const order = await this.orderRepo.findByOrderUid(orderUid);
 
     if (!order || order.status === 'Deleted') {
-      return false;
+      throw new Error('Could not cancel order');
     }
-    order.status = 'Deleted';
-    return true;
-  }
-  
 
+    await this.orderRepo.updateOrderStatus('Deleted', orderUid);
+  }
 }
