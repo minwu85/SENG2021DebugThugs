@@ -99,4 +99,18 @@ export class OrderService {
 
     await this.orderRepo.updateOrderStatus('Deleted', orderUid);
   }
+
+  public async completeOrder(orderUid: string): Promise <void> {
+    const order = await this.orderRepo.findByOrderUid(orderUid);
+
+    if (!order) {
+      throw new Error('Order does not exist');
+    }
+
+    if (order.status === 'Completed') {
+      throw new Error('Order is already completed');
+    }
+
+    await this.orderRepo.updateOrderStatus('Completed', orderUid);
+  }
 }

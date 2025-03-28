@@ -120,10 +120,24 @@ export async function logoutUserReq(token: string) {
 }
 
 // cancel order
-export async function cancelOrderRq(orderUid: string) {
+export async function cancelOrderReq(orderUid: string) {
   try {
     const res = await axios.post(
       `${SERVER_URL}/api/order/v1/order/cancel`,
+      { orderUid },
+      { timeout: 5 * 1000 }
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// complete order
+export async function completeOrderReq(orderUid: string) {
+  try {
+    const res = await axios.post(
+      `${SERVER_URL}/api/order/v1/order/complete`,
       { orderUid },
       { timeout: 5 * 1000 }
     );
