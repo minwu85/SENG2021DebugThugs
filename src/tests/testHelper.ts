@@ -118,3 +118,17 @@ export async function logoutUserReq(token: string) {
     throw error;
   }
 }
+
+// cancel order
+export async function cancelOrderRq(orderUid: string) {
+  try {
+    const res = await axios.post(
+      `${SERVER_URL}/api/order/v1/order/cancel`,
+      { orderUid },
+      { timeout: 5 * 1000 }
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}

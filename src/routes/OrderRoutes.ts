@@ -16,6 +16,9 @@ const router = Router();
 
 router.post('/v1/order/create', createOrder);
 
+// POST /api/order/cancel
+router.post('/v1/order/cancel', cancelOrder);
+
 // GET /api/order/:invoiceUid
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
 
@@ -24,9 +27,6 @@ router.get('/v1/order/fetchxml:orderUid', fetchXml);
 // GET /api/order/person/:personUid
 // router.get('/person/:personUid', getAllOrdersByPersonUid);
 router.get('/v1/order/retrieve/all/:personUid', getAllOrdersByPersonUid);
-
-// GET /api/order/cancel
-router.delete('/v1/order/cancel', cancelOrder);
 
 // DELETE /v1/clear
 // router.delete('/v1/clear', (req, res) => {

@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { closeServer, createOrder, fetchXmlRequest, getServerUrl, registerUserRequest, startTestServer } from "../testHelper";
+import { closeServer,
+  createOrder,
+  getServerUrl,
+  registerUserRequest,
+  startTestServer,
+  cancelOrderRq } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
 import { OrderRepository } from '../../repository/OrderRepository';
 
@@ -45,7 +50,13 @@ describe('fetchXml', () => {
   });
 
   test('successful deletion', async () => {
-    console.log(':)');
+    const res = await cancelOrderRq(orderUid);
+    expect(res.status).toBe(200);
+
+    // check status has changed
+    const orderRepo = new OrderRepository();
+    const findOrder = await orderRepo.findByOrderUid(orderUid);
+    expect(findOrder?.status).toBe('Deleted');
   });
 
   afterAll(async () => {

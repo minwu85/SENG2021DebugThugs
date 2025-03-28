@@ -259,3 +259,25 @@ export async function personFromToken(token: string): Promise <string | null> {
   const row = (rows as any[])[0];
   return row.personUid;
 }
+
+export async function updateOrderStatus(orderUid: string, status: string): Promise<void> {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    const updateSql = `
+      UPDATE orders
+      SET status = ?
+      WHERE orderUid = ?
+    `;
+    const updateParams = [status, orderUid];
+    await connection.query(updateSql, updateParams);
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+    throw err;
+  } finally {
+    connection.release();
+  }
+}
