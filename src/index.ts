@@ -28,6 +28,9 @@ app.use(express.json());
 // Serve static files (Swagger UI assets and swagger.yaml)
 //app.use(express.static(path.join(process.cwd(), 'public')));
 
+// API routes
+app.use('/api/person', personRoutes);
+app.use('/api/order', orderRoutes);
 
 if (fs.existsSync(path.join(process.cwd(), 'public', 'swagger.yaml'))) {
   console.log('swagger.yaml exists at the resolved path.');
@@ -44,16 +47,6 @@ app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
     '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
   customCssUrl: CSS_URL,
 }));
-
-app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.url}`);
-  console.log(`Body:`, req.body);
-  next();
-});
-
-// API routes
-app.use('/api/person', personRoutes);
-app.use('/api/order', orderRoutes);
 
 // Graceful shutdown
 process.on('SIGINT', async () => {

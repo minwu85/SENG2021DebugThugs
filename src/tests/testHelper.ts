@@ -44,13 +44,11 @@ export async function registerUserRequest(
   email: string
 ) {
   try {
-    console.log('in request');
     const res = await axios.post(
       `${SERVER_URL}/api/person/v1/registerUser`,
       { username, password, email },
       { timeout: 5 * 1000 }
     );
-    console.log('finished getting request');
     return res;
   } catch (error) {
     throw error;

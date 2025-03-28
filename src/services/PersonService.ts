@@ -28,8 +28,6 @@ export class PersonService {
 
     // generate new token
     const newToken = await this.sessionRepo.startSession(personUid);
-    console.log('in registerUserFunction');
-    console.log(newToken);
 
     return newToken;
   }
