@@ -11,7 +11,6 @@ describe('loginUser', () => {
   });
 
   beforeEach(async () => {
-    // insert clear function
     const SERVER_URL = getServerUrl();
 
     // Clear previous orders
