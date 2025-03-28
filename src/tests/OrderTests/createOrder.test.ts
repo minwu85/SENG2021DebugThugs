@@ -13,7 +13,6 @@ describe('createOrder', () => {
   });
 
   beforeEach(async () => {
-    // Ensure the test is using the dynamically set server URL
     const SERVER_URL = getServerUrl();
 
     // Clear previous orders
