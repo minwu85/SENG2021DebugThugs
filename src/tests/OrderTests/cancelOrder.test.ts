@@ -1,23 +1,54 @@
 import axios from 'axios';
-import { startServer, stopServer } from '../../startServer';
-import { Server } from 'http';
+import { closeServer, createOrder, fetchXmlRequest, getServerUrl, registerUserRequest, startTestServer } from "../testHelper";
+import { SessionRepository } from "../../repository/PersonRepository";
+import { OrderRepository } from '../../repository/OrderRepository';
 
-const TEST_PORT = 5001;
-const SERVER_URL = `http://localhost:${TEST_PORT}`;
-let server: Server;
-
-describe('cancel Order', () => {
+describe('fetchXml', () => {
+  let token: string;
+  let personUid: string;
+  let orderUid: string;
+  
   beforeAll(async () => {
-    server = await startServer();
+    await startTestServer(); // Start the test server first
   });
 
-  test.skip('successful order cancel', async () => {
-    const res = await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
-    expect(res.status).toBe(200);
-    expect(res.data).toStrictEqual({ message: expect.any(String) });
+  beforeEach(async () => {
+    const SERVER_URL = getServerUrl();
+
+    // insert clear function
+    await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
+
+    const register = await registerUserRequest('user', 'password', 'email');
+    token = register.data;
+
+    const sessionRepo = new SessionRepository();
+    const uid = await sessionRepo.findPersonUidFromToken(token);
+    if (uid === null) {
+      throw new Error('Person UID not found');
+    }
+    personUid = uid;
+
+    // create order
+    const order = await createOrder(
+      token,
+      personUid,
+      [
+        {
+          itemId: 'itemId',
+          itemQuantity: 2,
+          itemSeller: 'seller'
+        }
+      ],
+      '{"details": "Valid invoice details"}'
+    );
+    orderUid = order.data.result;
+  });
+
+  test('successful deletion', async () => {
+    console.log(':)');
   });
 
   afterAll(async () => {
-    await stopServer();
+    await closeServer();
   });
 });

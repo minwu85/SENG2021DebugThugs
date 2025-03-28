@@ -99,6 +99,4 @@ export class OrderService {
     order.status = 'Deleted';
     return true;
   }
-  
-
 }
