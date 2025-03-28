@@ -15,7 +15,6 @@ export async function startServer(): Promise<Server> {
         resolve(server!);
       });
     } catch (err) {
-      console.log(err);
       reject(err);
     }
   });
