@@ -21,7 +21,6 @@ describe('createOrder', () => {
 
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
-    console.log('token: ', token);
 
     const sessionRepo = new SessionRepository();
     const uid = await sessionRepo.findPersonUidFromToken(token);
