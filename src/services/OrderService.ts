@@ -98,7 +98,5 @@ export class OrderService {
     }
 
     await this.orderRepo.updateOrderStatus('Deleted', orderUid);
-
-    console.log(order);
   }
 }

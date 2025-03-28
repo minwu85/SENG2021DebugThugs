@@ -33,7 +33,6 @@ describe('retrieveAllOrders', () => {
       { itemId: 'item123', itemQuantity: 2, itemSeller: 'sellerX' }
     ], '{"details": "Valid invoice details"}');
   });
-  console.log('order created');
 
   test('should retrieve all orders for a valid personUid', async () => {
     const res = await axios.get(
