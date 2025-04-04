@@ -76,7 +76,59 @@ describe('createOrder', () => {
         throw error;
       }
     }
-  })
+  });
+
+  test('invalid personUid', async () => {
+    try {
+      await createOrder(
+        token,
+        'invalidpersonUid',
+        [
+          {
+            itemId: 'itemId',
+            itemQuantity: 2,
+            itemSeller: 'seller',
+          },
+        ],
+        '{"details": "Valid invoice details"}'
+      )
+      fail('Did not throw expect error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  });
+
+  test('invalid order details', async () => {
+    try {
+      await createOrder(
+        token,
+        personUid,
+        [
+          {
+            itemId: 'itemId',
+            itemQuantity: 2,
+            itemSeller: '',
+          },
+        ],
+        '{"details": "Valid invoice details"}'
+      )
+      fail('Did not throw expect error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(400);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  });
 
   afterAll(async () => {
     await closeServer();

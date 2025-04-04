@@ -66,24 +66,23 @@ describe('retrieveAllOrders', () => {
     }
   });
 
-  test.skip('should return 200 with empty array if no orders exist', async () => {
+  test('should return 200 with empty array if no orders exist', async () => {
     // create user with no orders
     const register2 = await registerUserRequest('user2', 'password2', 'email2');
     const token2 = register2.data;
     const sessionRepo = new SessionRepository();
-    const uid2 = sessionRepo.findPersonUidFromToken(token2);
+    const uid2 = await sessionRepo.findPersonUidFromToken(token2);
     if (uid2 === null) {
       throw new Error('Person UID not found');
     }
     const personUid2 = uid2;
 
     const res = await axios.get(
-      await axios.get(`${serverUrl}/api/order/v1/order/retrieve/all/${personUid2}`,
-        { headers: { token } })
-    );
+      `${serverUrl}/api/order/v1/order/retrieve/all/${personUid2}`,
+        { headers: { token2 } });
 
     expect(res.status).toBe(200);
-    expect(res.data).toStrictEqual([]); // Expect empty array if no orders exist
+    expect(res.data).toStrictEqual({orders: []}); // Expect empty array if no orders exist
   });
 
   afterAll(async () => {
