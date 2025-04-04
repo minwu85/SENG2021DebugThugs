@@ -59,6 +59,10 @@ describe('cancelOrder', () => {
     expect(findOrder?.status).toBe('Deleted');
   });
 
+  test('invalid token', async () => {
+    //
+  })
+
   afterAll(async () => {
     await closeServer();
   });

@@ -27,6 +27,8 @@ export class OrderRepository {
   public async clear(): Promise<void> {
     await pool.query('DELETE FROM orders');
     await pool.query('DELETE FROM items');
+    await pool.query('DELETE FROM persons');
+    await pool.query('DELETE FROM sessions');
   }
 }
 
