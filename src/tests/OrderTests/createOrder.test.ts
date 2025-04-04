@@ -30,8 +30,6 @@ describe('createOrder', () => {
   });
 
   test('successful order creation', async () => {
-    const SERVER_URL = getServerUrl();
-
     const res = await createOrder(
       token,
       personUid,
@@ -53,6 +51,32 @@ describe('createOrder', () => {
     const find = await repo.findByOrderUid(res.data.result);
     expect(find).toBeDefined();
   });
+
+  test('invalid token', async () => {
+    try {
+      await createOrder(
+        'invalidtoken',
+        personUid,
+        [
+          {
+            itemId: 'itemId',
+            itemQuantity: 2,
+            itemSeller: 'seller',
+          },
+        ],
+        '{"details": "Valid invoice details"}'
+      )
+      fail('Did not throw expect error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  })
 
   afterAll(async () => {
     await closeServer();

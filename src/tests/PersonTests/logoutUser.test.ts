@@ -17,8 +17,6 @@ describe('loginUser', () => {
 
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
-
-    await registerUserRequest('user', 'password', 'email');
   });
 
   test('successful logout', async () => {
