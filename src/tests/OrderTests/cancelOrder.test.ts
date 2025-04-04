@@ -59,6 +59,21 @@ describe('cancelOrder', () => {
     expect(findOrder?.status).toBe('Deleted');
   });
 
+  test('invalid orderUid', async () => {
+    try {
+      await cancelOrderReq('invalidOrderUid');
+      fail('Did not throw expected error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(400);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  });
+
   afterAll(async () => {
     await closeServer();
   });

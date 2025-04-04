@@ -55,8 +55,13 @@ export const cancelOrder = async (req: Request, res: Response): Promise<void> =>
     await orderService.cancelOrder(orderUid);
     res.status(200).json({ message: 'Order canceled successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-    throw error
+    if (error instanceof Error) {
+      if (error.message === 'Could not cancel order') {
+        res.status(400).json({ error: 'Could not cancel order'});
+      }
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
