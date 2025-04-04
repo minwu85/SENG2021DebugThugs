@@ -17,8 +17,6 @@ describe('loginUser', () => {
 
     const register = await registerUserRequest('user', 'password', 'email');
     token = register.data;
-
-    await registerUserRequest('user', 'password', 'email');
   });
 
   test('successful logout', async () => {
@@ -50,6 +48,25 @@ describe('loginUser', () => {
     const repo = new SessionRepository;
     const find = await repo.findPersonUidFromToken(token);
     expect(find).toStrictEqual(expect.any(String));
+  });
+
+  test('already logged out', async () => {
+    const res = await logoutUserReq(token);
+    expect(res.status).toBe(200);
+    expect(res.data).toStrictEqual({});
+    
+    try {
+      await logoutUserReq(token);
+     fail('Did not throw expected error');
+   } catch (error) {
+     if (error instanceof Error) {
+       const axiosError = error as any;
+       expect(axiosError.response.status).toBe(401);
+       expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+     } else {
+       throw error;
+     }
+   }
   });
 
   afterAll(async () => {

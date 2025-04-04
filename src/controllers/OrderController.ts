@@ -21,9 +21,13 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
     res.status(200).json({ result });
   } catch (error ) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      if (error.message === 'Invalid token') {
+        res.status(401).json({ error: error.message });
+      } else {
+        res.status(400).json({ error: error.message });
+      }
     } else {
-      res.status(400).json({ message: 'Unknown error' });
+      res.status(500).json({ error: 'Unknown error' });
     }
   }
 }
@@ -37,9 +41,9 @@ export async function completeOrder(req: Request, res: Response): Promise <void>
     res.status(200).json({ message: 'Order completed successfully '});
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ message: 'Unknown error' });
+      res.status(400).json({ error: 'Unknown error' });
     }
   }
 }
@@ -51,8 +55,13 @@ export const cancelOrder = async (req: Request, res: Response): Promise<void> =>
     await orderService.cancelOrder(orderUid);
     res.status(200).json({ message: 'Order canceled successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-    throw error
+    if (error instanceof Error) {
+      if (error.message === 'Could not cancel order') {
+        res.status(400).json({ error: 'Could not cancel order'});
+      }
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
@@ -80,9 +89,9 @@ export async function fetchXml(req: Request, res: Response): Promise <any> {
     return res.status(200).json(result);
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(500).json(error.message);
+      return res.status(500).json({ error: error.message });
   } else {
-      return res.status(500).json('Unknown error');
+      return res.status(500).json({ error: 'Unknown error' });
   }
   }
 }
