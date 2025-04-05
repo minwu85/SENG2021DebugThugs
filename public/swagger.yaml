@@ -179,3 +179,4 @@ paths:
           description: Database cleared successfully
         500:
           description: Internal server error
+          
