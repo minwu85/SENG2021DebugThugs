@@ -1,5 +1,4 @@
 import express, { Application } from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as swaggerUi from 'swagger-ui-express';
 import * as path from 'path';
 import * as YAML from 'yamljs';
@@ -11,20 +10,10 @@ import orderRoutes from './routes/OrderRoutes';
 import { initDB, closeDB } from './database/DatabaseConnection';
 
 const app: Application = express();
-const INVOICE_API = 'http://sushi-invoice-application.ap-southeast-2.elasticbeanstalk.com';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Proxy external APIs
-app.use('/api/external/invoice', createProxyMiddleware({
-  target: INVOICE_API,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/api/external/proxy': '', // strips the proxy prefix
-  },
-}));
 
 // Initialize database connection
 (async () => {

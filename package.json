@@ -45,7 +45,6 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fast-xml-parser": "^5.0.9",
-    "http-proxy-middleware": "^3.0.3",
     "mysql2": "^3.13.0",
     "node": "^23.9.0",
     "swagger-ui-dist": "^5.20.1",
