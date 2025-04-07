@@ -27,12 +27,19 @@ export class OrderService {
     invoiceDetails?: any
   ): Promise<string> {
     // validate token and personUid
-    const validateToken = new Validation();
+    const validation = new Validation();
 
     try {
-      await validateToken.validateToken(token, personUid);
+      await validation.validateToken(token, personUid);
     } catch (error) {
       throw new Error('Invalid token');
+    }
+
+    // validate order details
+    try {
+      await validation.validateOrderDetails(personUid, itemList);
+    } catch (error) {
+      throw error;
     }
     
     // create orderUid
@@ -90,15 +97,27 @@ export class OrderService {
     return await this.orderRepo.findAllByPersonUid(personUid);
   }
 
-  public async cancelOrder(orderUid: string): Promise<boolean> {
+  public async cancelOrder(orderUid: string): Promise<void> {
     const order = await this.orderRepo.findByOrderUid(orderUid);
 
     if (!order || order.status === 'Deleted') {
-      return false;
+      throw new Error('Could not cancel order');
     }
-    order.status = 'Deleted';
-    return true;
-  }
-  
 
+    await this.orderRepo.updateOrderStatus('Deleted', orderUid);
+  }
+
+  public async completeOrder(orderUid: string): Promise <void> {
+    const order = await this.orderRepo.findByOrderUid(orderUid);
+
+    if (!order) {
+      throw new Error('Order does not exist');
+    }
+
+    if (order.status === 'Completed') {
+      throw new Error('Order is already completed');
+    }
+
+    await this.orderRepo.updateOrderStatus('Completed', orderUid);
+  }
 }

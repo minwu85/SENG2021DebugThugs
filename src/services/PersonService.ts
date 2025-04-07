@@ -20,6 +20,12 @@ export class PersonService {
    * @returns {string} token
   */
   public async registerUser(username: string, password: string, email: string): Promise<string> {
+    // check username is unique
+    const findUsername = await this.personRepo.findByUsername(username);
+    if (findUsername) {
+      throw new Error('Username already exists');
+    }
+    
     const personUid = uuidv4();
     const newPerson = new Person(personUid, username, password, email);
 

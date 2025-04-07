@@ -1,17 +1,20 @@
 import axios from 'axios';
-import { PORT, server } from '../../index'
-import { closeServer, createOrder, fetchXmlRequest, registerUserRequest } from "../testHelper";
+import { closeServer, createOrder, fetchXmlRequest, getServerUrl, registerUserRequest, startTestServer } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
-import { Order } from '../../domain/Order';
 import { OrderRepository } from '../../repository/OrderRepository';
-
-const SERVER_URL = `http://localhost:${PORT}`;
 
 describe('fetchXml', () => {
   let token: string;
   let personUid: string;
   let orderUid: string;
+  
+  beforeAll(async () => {
+    await startTestServer(); // Start the test server first
+  });
+
   beforeEach(async () => {
+    const SERVER_URL = getServerUrl();
+
     // insert clear function
     await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
 
@@ -63,7 +66,7 @@ describe('fetchXml', () => {
       if (error instanceof Error) {
         const axiosError = error as any;
         expect(axiosError.response.status).toBe(500);
-        expect(axiosError.response.data).toStrictEqual(expect.any(String));
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String)});
       } else {
         throw error;
       }
@@ -71,6 +74,6 @@ describe('fetchXml', () => {
   });
 
   afterAll(async () => {
-    await closeServer(server);
+    await closeServer();
   });
 });

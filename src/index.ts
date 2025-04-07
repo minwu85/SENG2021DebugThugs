@@ -11,6 +11,10 @@ import { initDB, closeDB } from './database/DatabaseConnection';
 
 const app: Application = express();
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
 // Initialize database connection
 (async () => {
   try {
@@ -22,28 +26,27 @@ const app: Application = express();
 })();
 
 // Serve static files (Swagger UI assets and swagger.yaml)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Load Swagger YAML
-const swaggerPath = path.resolve(__dirname, 'public', 'swagger.yaml');
-let swaggerDocument;
-if (fs.existsSync(swaggerPath)) {
-  swaggerDocument = YAML.parse(fs.readFileSync(swaggerPath, 'utf8'));
-} else {
-  console.error('Swagger file not found!');
-  swaggerDocument = {};
-}
-
-// Serve Swagger UI at /api-docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// Middleware
-app.use(cors());
-app.use(express.json());
+//app.use(express.static(path.join(process.cwd(), 'public')));
 
 // API routes
 app.use('/api/person', personRoutes);
 app.use('/api/order', orderRoutes);
+
+if (fs.existsSync(path.join(process.cwd(), 'public', 'swagger.yaml'))) {
+  console.log('swagger.yaml exists at the resolved path.');
+} else {
+  console.error('swagger.yaml does NOT exist at the resolved path.');
+}
+// Load Swagger YAML
+const swaggerDocument = YAML.load(path.join(process.cwd(), 'public', 'swagger.yaml'));
+// CDN CSS
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+// Serve Swagger UI at /api-docs
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customCss:
+    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customCssUrl: CSS_URL,
+}));
 
 // Graceful shutdown
 process.on('SIGINT', async () => {

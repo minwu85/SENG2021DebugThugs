@@ -4,11 +4,11 @@ import { closeServer,
   getServerUrl,
   registerUserRequest,
   startTestServer,
-  cancelOrderReq } from "../testHelper";
+  completeOrderReq } from "../testHelper";
 import { SessionRepository } from "../../repository/PersonRepository";
 import { OrderRepository } from '../../repository/OrderRepository';
 
-describe('cancelOrder', () => {
+describe('completeOrder', () => {
   let token: string;
   let personUid: string;
   let orderUid: string;
@@ -49,19 +49,19 @@ describe('cancelOrder', () => {
     orderUid = order.data.result;
   });
 
-  test('successful deletion', async () => {
-    const res = await cancelOrderReq(orderUid);
+  test('successful completion', async () => {
+    const res = await completeOrderReq(orderUid);
     expect(res.status).toBe(200);
 
     // check status has changed
     const orderRepo = new OrderRepository();
     const findOrder = await orderRepo.findByOrderUid(orderUid);
-    expect(findOrder?.status).toBe('Deleted');
+    expect(findOrder?.status).toBe('Completed');
   });
 
   test('invalid orderUid', async () => {
     try {
-      await cancelOrderReq('invalidOrderUid');
+      await completeOrderReq('invalidorderUid');
       fail('Did not throw expected error');
     } catch (error) {
       if (error instanceof Error) {
@@ -74,10 +74,11 @@ describe('cancelOrder', () => {
     }
   });
 
-  test('order is already cancelled', async () => {
-    await cancelOrderReq(orderUid);
+  test('order already completed', async () => {
+    await completeOrderReq(orderUid);
+
     try {
-      await cancelOrderReq(orderUid);
+      await completeOrderReq(orderUid);
       fail('Did not throw expected error');
     } catch (error) {
       if (error instanceof Error) {
