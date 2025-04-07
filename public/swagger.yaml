@@ -138,22 +138,58 @@ paths:
           description: Unauthorized
 
   /api/order/v1/order/cancel:
-    delete:
+    post:
       summary: Cancels an order
       parameters:
-        - name: orderUid
-          in: query
+        - in: body
+          name: body
+          description: Order UID to cancel
           required: true
-          type: string
-          format: uuid
-          description: GUID of the order to cancel
+          schema:
+            type: object
+            properties:
+              orderUid:
+                type: string
+                format: uuid
+            required:
+              - orderUid
       responses:
         200:
           description: Order canceled successfully
         400:
-          description: Bad Request
+          description: Could not cancel order
         401:
           description: Unauthorized
+        500:
+          description: Internal server error
+
+  
+  /api/order/v1/complete:
+    post:
+      summary: Marks an order as completed
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Order UID to complete
+          required: true
+          schema:
+            type: object
+            properties:
+              orderUid:
+                type: string
+                format: uuid
+            required:
+              - orderUid
+      responses:
+        200:
+          description: Order completed successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+
 
   /api/order/v1/clear:
     delete:
