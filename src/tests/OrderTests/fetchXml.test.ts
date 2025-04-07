@@ -66,7 +66,7 @@ describe('fetchXml', () => {
       if (error instanceof Error) {
         const axiosError = error as any;
         expect(axiosError.response.status).toBe(500);
-        expect(axiosError.response.data).toStrictEqual(expect.any(String));
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String)});
       } else {
         throw error;
       }

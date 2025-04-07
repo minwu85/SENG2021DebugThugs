@@ -30,8 +30,6 @@ describe('createOrder', () => {
   });
 
   test('successful order creation', async () => {
-    const SERVER_URL = getServerUrl();
-
     const res = await createOrder(
       token,
       personUid,
@@ -52,6 +50,84 @@ describe('createOrder', () => {
     const repo = new OrderRepository();
     const find = await repo.findByOrderUid(res.data.result);
     expect(find).toBeDefined();
+  });
+
+  test('invalid token', async () => {
+    try {
+      await createOrder(
+        'invalidtoken',
+        personUid,
+        [
+          {
+            itemId: 'itemId',
+            itemQuantity: 2,
+            itemSeller: 'seller',
+          },
+        ],
+        '{"details": "Valid invoice details"}'
+      )
+      fail('Did not throw expect error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  });
+
+  test('invalid personUid', async () => {
+    try {
+      await createOrder(
+        token,
+        'invalidpersonUid',
+        [
+          {
+            itemId: 'itemId',
+            itemQuantity: 2,
+            itemSeller: 'seller',
+          },
+        ],
+        '{"details": "Valid invoice details"}'
+      )
+      fail('Did not throw expect error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  });
+
+  test('invalid order details', async () => {
+    try {
+      await createOrder(
+        token,
+        personUid,
+        [
+          {
+            itemId: 'itemId',
+            itemQuantity: 2,
+            itemSeller: '',
+          },
+        ],
+        '{"details": "Valid invoice details"}'
+      )
+      fail('Did not throw expect error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(400);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
   });
 
   afterAll(async () => {

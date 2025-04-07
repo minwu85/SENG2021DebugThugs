@@ -31,6 +31,23 @@ describe('registerUser', () => {
     expect(findSession).toStrictEqual(expect.any(String));
   });
 
+  test('username already exists', async () => {
+    await registerUserRequest('user', 'test', 'test');
+    
+    try {
+      await registerUserRequest('user', 'test', 'test');
+      fail('Did not throw expected error');
+    } catch (error) {
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        expect(axiosError.response.status).toBe(401);
+        expect(axiosError.response.data).toStrictEqual({ error: expect.any(String) });
+      } else {
+        throw error;
+      }
+    }
+  });
+
   afterAll(async () => {
     await closeServer();
   });

@@ -84,7 +84,7 @@ export async function logoutUser(req: Request, res: Response): Promise <any> {
     return res.status(200).json(result);
   } catch (error) {
     if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(401).json({ error: error.message });
     } else {
         return res.status(500).json({ error: 'Unknown error' });
     }
