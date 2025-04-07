@@ -22,7 +22,7 @@ app.use('/api/external/invoice', createProxyMiddleware({
   target: INVOICE_API,
   changeOrigin: true,
   pathRewrite: {
-    '^/api/external/proxy': '', // strips the proxy prefix
+    '^/api/external/invoice': '', // strips the proxy prefix
   },
 }));
 
