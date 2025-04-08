@@ -52,7 +52,7 @@ paths:
       summary: Logs out a user and ends the session
       parameters:
         - name: token
-          in: query
+          in: header
           required: true
           type: string
           description: Session token
