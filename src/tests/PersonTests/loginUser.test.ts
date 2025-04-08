@@ -24,11 +24,12 @@ describe('loginUser', () => {
       const res = await loginUserRequest('email', 'password');
 
       expect(res.status).toBe(200);
-      expect(res.data).toStrictEqual(expect.any(String));
+      expect(res.data.token).toStrictEqual(expect.any(String));
+      expect(res.data.personUid).toStrictEqual(expect.any(String));
 
       // check session was pushed
       const repo = new SessionRepository();
-      const findSession = await repo.findPersonUidFromToken(res.data);
+      const findSession = await repo.findPersonUidFromToken(res.data.token);
       expect(findSession).toBeDefined();
   });
 

@@ -18,7 +18,8 @@ describe('registerUser', () => {
 
     expect(res.status).toBe(200);
 
-    expect(res.data).toStrictEqual(expect.any(String));
+    expect(res.data.token).toStrictEqual(expect.any(String));
+    expect(res.data.personUid).toStrictEqual(expect.any(String));
 
     // Check that person was pushed into person repo and token into session
     const repoP = new PersonRepository();
@@ -27,7 +28,7 @@ describe('registerUser', () => {
     expect(findPerson).toBeDefined();
 
     const repoS = new SessionRepository();
-    const findSession = await repoS.findPersonUidFromToken(res.data);
+    const findSession = await repoS.findPersonUidFromToken(res.data.token);
     expect(findSession).toStrictEqual(expect.any(String));
   });
 

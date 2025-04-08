@@ -19,7 +19,7 @@ describe('retrieveAllOrders', () => {
     await axios.delete(`${serverUrl}/api/order/v1/clear`);
 
     const register = await registerUserRequest('user', 'password', 'email');
-    token = register.data;
+    token = register.data.token;
     const sessionRepo = new SessionRepository();
     const uid = await sessionRepo.findPersonUidFromToken(token);
     if (uid === null) {
@@ -69,7 +69,7 @@ describe('retrieveAllOrders', () => {
   test('should return 200 with empty array if no orders exist', async () => {
     // create user with no orders
     const register2 = await registerUserRequest('user2', 'password2', 'email2');
-    const token2 = register2.data;
+    const token2 = register2.data.token;
     const sessionRepo = new SessionRepository();
     const uid2 = await sessionRepo.findPersonUidFromToken(token2);
     if (uid2 === null) {

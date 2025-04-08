@@ -19,7 +19,7 @@ export class PersonService {
    * @param {string} email
    * @returns {string} token
   */
-  public async registerUser(username: string, password: string, email: string): Promise<string> {
+  public async registerUser(username: string, password: string, email: string): Promise<object> {
     // check username is unique
     const findUsername = await this.personRepo.findByUsername(username);
     if (findUsername) {
@@ -35,7 +35,12 @@ export class PersonService {
     // generate new token
     const newToken = await this.sessionRepo.startSession(personUid);
 
-    return newToken;
+    const ret = {
+      token: newToken,
+      personUid: personUid
+    };
+
+    return ret;
   }
 
   /**
@@ -44,7 +49,7 @@ export class PersonService {
    * @param {string} password
    * @returns {string} token
   */
-  public async loginUser(userInput: string, password: string): Promise <string> {
+  public async loginUser(userInput: string, password: string): Promise <object> {
     // check if 'user' is username or email
     const validation = new Validation();
     let user: Person;
@@ -72,7 +77,13 @@ export class PersonService {
 
     // start a new session for this user
     const token = await this.sessionRepo.startSession(user.personUid);
-    return token;
+
+    const ret = {
+      token: token,
+      personUid: user.personUid
+    };
+
+    return ret;
   }
 
   /**

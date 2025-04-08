@@ -19,7 +19,7 @@ describe('fetchXml', () => {
     await axios.delete(`${SERVER_URL}/api/order/v1/clear`);
 
     const register = await registerUserRequest('user', 'password', 'email');
-    token = register.data;
+    token = register.data.token;
 
     const sessionRepo = new SessionRepository();
     const uid = await sessionRepo.findPersonUidFromToken(token);
