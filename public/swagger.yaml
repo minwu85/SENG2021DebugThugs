@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: Order and Admin API
+  title: Order and Admin API - DEBUG THUGS
   version: "1.0.0"
   description: API documentation for order management and admin functionalities.
 
