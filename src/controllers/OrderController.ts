@@ -16,9 +16,9 @@ export async function createOrder(req: Request, res: Response): Promise <void> {
   }
   
   try {
-    const result = await orderService.createOrder(token, personUid, itemList,
+    const orderUid = await orderService.createOrder(token, personUid, itemList,
       invoiceDetails);
-    res.status(200).json({ result });
+    res.status(200).json({ orderUid });
   } catch (error ) {
     if (error instanceof Error) {
       if (error.message === 'Invalid token') {

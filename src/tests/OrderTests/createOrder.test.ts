@@ -44,11 +44,11 @@ describe('createOrder', () => {
     );
 
     expect(res.status).toBe(200);
-    expect(res.data.result).toStrictEqual(expect.any(String));
+    expect(res.data.orderUid).toStrictEqual(expect.any(String));
 
     // Check if the order exists in the repository
     const repo = new OrderRepository();
-    const find = await repo.findByOrderUid(res.data.result);
+    const find = await repo.findByOrderUid(res.data.orderUid);
     expect(find).toBeDefined();
   });
 
