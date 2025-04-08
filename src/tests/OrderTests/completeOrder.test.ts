@@ -46,7 +46,7 @@ describe('completeOrder', () => {
       ],
       '{"details": "Valid invoice details"}'
     );
-    orderUid = order.data.result;
+    orderUid = order.data.orderUid;
   });
 
   test('successful completion', async () => {
