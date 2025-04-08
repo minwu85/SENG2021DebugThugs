@@ -2,15 +2,18 @@ import { OrderRepository, saveXml } from '../repository/OrderRepository';
 import { Order, Item } from '../domain/Order';
 import { v4 as uuidv4 } from 'uuid';
 import { Validation } from './ServicesHelper';
+import { PersonRepository, SessionRepository } from '../repository/PersonRepository';
 var convert = require('xml-js');
 
 type OrderStatus = 'Pending' | 'Completed' | 'Deleted';
 
 export class OrderService {
   private orderRepo: OrderRepository;
+  private sessionRepo: SessionRepository;
 
   constructor() {
     this.orderRepo = new OrderRepository();
+    this.sessionRepo = new SessionRepository();
   }
 
   /**
@@ -22,22 +25,35 @@ export class OrderService {
   */
   public async createOrder(
     token: string,
-    personUid: string,
+    personUid?: string,
     itemList?: Item[],
     invoiceDetails?: any
   ): Promise<string> {
     // validate token and personUid
     const validation = new Validation();
+    let personUidValidated;
+    if (!personUid) {
+      let personUidValidated = await this.sessionRepo.findPersonUidFromToken(token);
+      if (!personUidValidated || personUidValidated) {
+        throw new Error('Invalid token');
+      }
+    } else {
+      personUidValidated = personUid;
+    }
 
-    try {
-      await validation.validateToken(token, personUid);
-    } catch (error) {
-      throw new Error('Invalid token');
+    if (typeof personUidValidated === 'string') {
+      try {
+        await validation.validateToken(token, personUidValidated);
+      } catch (error) {
+        throw new Error('Invalid token');
+      }
+    } else {
+      throw new Error('Invalid token: personUidValidated is not a string');
     }
 
     // validate order details
     try {
-      await validation.validateOrderDetails(personUid, itemList);
+      await validation.validateOrderDetails(personUidValidated, itemList);
     } catch (error) {
       throw error;
     }
@@ -46,7 +62,7 @@ export class OrderService {
     const orderUid = uuidv4();
 
     // create new Order and save to repo
-    const newOrder = new Order(orderUid, personUid, 'Pending', itemList, invoiceDetails);
+    const newOrder = new Order(orderUid, personUidValidated, 'Pending', itemList, invoiceDetails);
     await this.orderRepo.save(newOrder);
 
     return orderUid;
