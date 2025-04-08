@@ -203,7 +203,7 @@ paths:
           description: Internal server error
 
   
-  /api/order/v1/complete:
+  /api/order/v1/order/complete:
     post:
       summary: Marks an order as completed
       consumes:
