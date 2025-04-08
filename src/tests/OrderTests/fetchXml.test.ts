@@ -41,7 +41,7 @@ describe('fetchXml', () => {
       ],
       '{"details": "Valid invoice details"}'
     );
-    orderUid = order.data.result;
+    orderUid = order.data.orderUid;
   });
 
   test('successful xml return', async () => {
@@ -49,6 +49,7 @@ describe('fetchXml', () => {
 
     expect(res.status).toBe(200);
     expect(res.data).toStrictEqual(expect.any(String));
+    console.log(res.data);
 
     // check xml was added to order object in repo
     const orderRepo = new OrderRepository();

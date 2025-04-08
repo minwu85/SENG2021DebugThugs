@@ -95,7 +95,7 @@ export async function createOrder(
 export async function fetchXmlRequest(orderUid: string) {
   try {
     const res = await axios.get(
-      `${SERVER_URL}/api/order/v1/order/fetchxml${orderUid}`
+      `${SERVER_URL}/api/order/v1/order/fetchxml/${orderUid}`
     );
     return res;
   } catch (error) {

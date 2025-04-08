@@ -24,7 +24,7 @@ router.post('/v1/order/complete', completeOrder);
 // GET /api/order/:invoiceUid
 // router.get('/:invoiceUid', getOrderByInvoiceUid);
 
-router.get('/v1/order/fetchxml:orderUid', fetchXml);
+router.get('/v1/order/fetchxml/:orderUid', fetchXml);
 
 // GET /api/order/person/:personUid
 // router.get('/person/:personUid', getAllOrdersByPersonUid);
