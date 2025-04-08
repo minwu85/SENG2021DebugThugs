@@ -37,7 +37,7 @@ paths:
           schema:
             type: object
             properties:
-              username:
+              userInput:
                 type: string
               password:
                 type: string
@@ -66,6 +66,12 @@ paths:
     post:
       summary: Creates an order
       parameters:
+        - in: header
+          name: token
+          required: true
+          description: Authentication token
+          schema:
+            type: string
         - in: body
           name: order
           required: true
@@ -100,6 +106,14 @@ paths:
       responses:
         200:
           description: Order created successfully
+          content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                result:
+                  type: string
+                  description: order ID
         400:
           description: Bad Request
         401:
